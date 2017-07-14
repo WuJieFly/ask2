@@ -49,6 +49,9 @@ class base {
     }
 
     function getcategory($id){
+        
+        
+        $this->load('category');
         $cainfo =  $_ENV['category']->get($id);
         return $cainfo;
     }
