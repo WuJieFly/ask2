@@ -275,9 +275,11 @@
                   <!--{if $user['uid']==$answer['authorid']}-->
                       
                        <a href="{url answer/append/$question['id']/$answer['id']}" data-original-title="继续回答问题"  data-placement="bottom" title="" data-toggle="tooltip" ><i class="fa fa-edit"></i> <span>继续回答</span></a>
+                  <!--{/if}-->   
 
+                  <!--{if $user['grouptype']==1 || $user['uid'] ==$answer['authorid']}-->
                <a href="{url question/editanswer/$answer['id']}" data-original-title="修改自己答案"  data-placement="bottom" title="" data-toggle="tooltip" ><i class="fa fa-edit"></i> <span>编辑</span></a>
-                 <!--{/if}-->   
+                <!--{/if}-->
                 <!--{if $user['uid']==$question['authorid']}-->
           
            <a data-placement="bottom" title="" data-toggle="tooltip" data-original-title="继续回答问题" href="{url answer/append/$question['id']/$answer['id']}"><i class="fa fa-file-powerpoint-o"></i> <span>追问</span></a>
