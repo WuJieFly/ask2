@@ -171,7 +171,7 @@
             <a href="{url user/space/$bestanswer['authorid']}" target="_blank" class="name">{$bestanswer['author']}</a> 
             <!---->
              <div class="meta">
-             <span>  {$bestanswer['format_time']}.<span class="text-danger"><i class="fa fa-check"></i>采纳回答</span></span>
+             <span> 1 楼 ·{$bestanswer['format_time']}.<span class="text-danger"><i class="fa fa-check"></i>采纳回答</span></span>
              </div>
              </div>
              </div> 
@@ -247,7 +247,7 @@
             <a href="{url user/space/$answer['authorid']}" target="_blank" class="name">{$answer['author']}</a> 
             <!---->
              <div class="meta">
-             <span>{eval echo $nindex+1;}楼 · {$answer['time']}</span>
+             <span>   <!--{if $bestanswer['id']>0}-->   {eval echo  $nindex+2;} <!--{else}--> {eval echo $nindex+1} <!--{/if}--> 楼 · {$answer['time']}</span>
              </div>
              </div>
              </div> 
