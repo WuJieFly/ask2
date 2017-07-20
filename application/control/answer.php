@@ -19,15 +19,20 @@ class answercontrol extends base {
     /* 追问模块---追问 */
 
     function onappend() {
+
         $this->load("message");
+
         $qid = intval($this->get[2]) ? $this->get[2] : intval($this->post['qid']);
         $aid = intval($this->get[3]) ? $this->get[3] : intval($this->post['aid']);
+ 
         $question = $_ENV['question']->get($qid);
+ 
         $answer = $_ENV['answer']->get($aid);
         if (!$question || !$answer) {
             $this->message("回答内容不存在!");
             exit;
         }
+   
         $viewurl = urlmap('question/view/' . $qid, 2);
         if (isset($this->post['submit'])) {
 //        	if($this->user['grouptype']!=1){

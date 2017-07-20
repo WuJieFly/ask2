@@ -48,6 +48,14 @@ class base {
         $this->usergroup = $this->cache->load('usergroup', 'groupid');
     }
 
+    function getcategory($id){
+        
+        
+        $this->load('category');
+        $cainfo =  $_ENV['category']->get($id);
+        return $cainfo;
+    }
+
     /* 从缓存中读取数据，如果失败，则自动去读取数据然后写入缓存 */
 
     function fromcache($cachename, $cachetime = 3) {
@@ -136,6 +144,24 @@ class base {
 
                 $cachedata = $_ENV['topic']->get_list(1, 0, 10, 10);
                 break;
+//            case 'topictopdata'://首页置顶缓存内容数组
+//                $this->load('topic');
+//                if(!isset($this->setting['list_topdatanum'])){
+//                    $cachedata = $_ENV['topic']->get_indextoplist(1,0,3,10);
+//                }else{
+//                    $cachedata = $_ENV['topic']->get_indextoplist(1,0,$this->setting['list_topdatanum'],10);
+//                }
+//
+//                break;
+//            case 'notetopdata'://首页置顶缓存内容数组
+//                $this->load('note');
+//                if(!isset($this->setting['list_topdatanum'])){
+//                    $cachedata = $_ENV['note']->get_toplist(0,3);
+//                }else{
+//                    $cachedata = $_ENV['note']->get_toplist(0,$this->setting['list_topdatanum']);
+//                }
+//
+//                break;
                   case 'cweixin':
                 $this->load('weixin_setting');
                 $cachedata = $_ENV['weixin_setting']->get();
@@ -291,8 +317,67 @@ class base {
                
     }
     
-    
+    function get_sqlDB_windows($customercode=''){
+        $serverName = "172.16.1.218"; //数据库服务器地址
+        $uid = "readuser";     //数据库用户名
+        $pwd = "readuser"; //数据库密码
+        $connectionInfo = array("UID"=>$uid, "PWD"=>$pwd, "Database"=>"DS_10");
+        $conn = sqlsrv_connect($serverName, $connectionInfo);
+        if( $conn == false)
+        {
+            echo "连接失败！";
+            var_dump(sqlsrv_errors());
+            exit;
+        }else{
+            $sql = "SELECT TOP 1 A.DELIVERY_LISENCE_NO,B.CUSTOMER_CODE,B.CUSTOMER_NAME,B.SHIP_TO_CONTACT,B.SHIP_TO_CONTACT_TEL													
+FROM DELIVERY_LISENCE A	LEFT JOIN DELIVERY_CUSTOMER B ON A.SOURCE_ID_ROid = B.DELIVERY_CUSTOMER_ID													
+WHERE  B.CUSTOMER_CODE = '$customercode' AND A.SOURCE_ID_RTK = 'DELIVERY_CUSTOMER' AND A.ApproveStatus = 'Y' AND B.ApproveStatus = 'Y'";
 
+            $stmt = sqlsrv_query( $conn, $sql);
+            if( $stmt === false ) {
+                die( print_r( sqlsrv_errors(), true));
+            }
+            $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC);
+            if($row!=null) {
+                $row['CUSTOMER_NAME'] = iconv('GBK', 'UTF-8', $row['CUSTOMER_NAME']);
+                $row['SHIP_TO_CONTACT'] = iconv('GBK', 'UTF-8', $row['SHIP_TO_CONTACT']);
+            }
+            //$obj = sqlsrv_fetch_object( $stmt);
+//            while( $obj) {
+//                echo $obj->DELIVERY_LISENCE_NO.", ".$obj->CUSTOMER_CODE."<br />";
+//            }
+            // 关闭连接
+            sqlsrv_close($conn);
+            return $row;
+        }
+    }
+    function get_sqlDB_linux($customercode=''){
+        $serverName = "172.16.1.218"; //数据库服务器地址
+        $uid = "readuser";     //数据库用户名
+        $pwd = "readuser"; //数据库密码
+        $conn = mssql_connect($serverName, $uid,$pwd);
+        if (!$conn) {
+            echo "connect sqlserver error";
+            exit;
+        }else{
+            $sql = "SELECT TOP 1 A.DELIVERY_LISENCE_NO,B.CUSTOMER_CODE,B.CUSTOMER_NAME,B.SHIP_TO_CONTACT,B.SHIP_TO_CONTACT_TEL													
+FROM DELIVERY_LISENCE A	LEFT JOIN DELIVERY_CUSTOMER B ON A.SOURCE_ID_ROid = B.DELIVERY_CUSTOMER_ID													
+WHERE  B.CUSTOMER_CODE = '$customercode' AND A.SOURCE_ID_RTK = 'DELIVERY_CUSTOMER' AND A.ApproveStatus = 'Y' AND B.ApproveStatus = 'Y'";
+            mssql_select_db("DS_10",$conn);
+            $result = mssql_query($sql, $conn);
+            if( $result === false ) {
+                die( print_r( sqlsrv_errors(), true));
+            }
+            $row = mssql_fetch_array($result);
+//            if($row!=null) {
+//                $row['CUSTOMER_NAME'] = iconv('GBK', 'UTF-8', $row['CUSTOMER_NAME']);
+//                $row['SHIP_TO_CONTACT'] = iconv('GBK', 'UTF-8', $row['SHIP_TO_CONTACT']);
+//            }
+            // 关闭连接
+            mssql_free_result($result);
+            return $row;
+        }
+    }
     /* 权限检测 */
 
     function checkable($url,$querystring='') {
@@ -306,11 +391,28 @@ class base {
         $this->regular = $url;
         if (1 == $this->user['groupid'])
             return true;
-            
+        //如果没登录直接进入登录页面
+        if($url =='index/default') {
+            if ($this->user['uid'] == 0 || $this->user['uid'] == null) {
+                header("location:user/login");
+                exit();
+            }
+        }
+        $routing ='index/help,js/view,attach/upload,user/xinzhi,user/attention_user';
+        $routing .=',user/login,user/logout,user/code,user/getpass,user/resetpass';
+        $routing .=',tags/default,new/maketag,tag/default,user/regtip,new/default,user/deletexinzhi,user/editxinzhi,user/addxinzhi';
+        $routing .=',topic/userxinzhi,topic/getone,topic/catlist,topic/hotlist';
+        $routing .= ',index/taobao,question/searchkey,pccaiji_catgory/addtopic,pccaiji_catgory/selectlist,pccaiji_catgory/list,topic/search,buy/buydetail,buy/default,download/default';
+        $routing .= ',chat/default,api_article/newqlist,api_article/list,api_user/editpwdapi,api_user/loginoutapi,api_user/bindloginapi,api_user/loginapi,api_user/bindregisterapi,api_user/registerapi';
+        //daixy用户认证
+        $routing .= ',user/emailcheck,user/neweditemail,user/sendemailcode,user/checkemail';
+        //daixy 客户注册登陆等
+        $routing .= ',user/customercheck,user/savecustomer,user/customerapproval,user/querypass,user/checkcustomeremailcode,user/resendcustomeremailcode,user/checkcustomerinfo,api_user/customerloginapi,user/registercustomer';
+        //daixy 置顶取消置顶
+        $routing .= ',note/cancelindextop,note/addindextop,topic/addcategorytop,topic/cancelcategorytop,topic/addindextop,topic/cancelindextop,';
+        $routing .=$this->user['regulars'];
           //  $pccaiji="";
-         
-        $regulars = explode(',', 'user/emailcheck,user/neweditemail,user/sendemailcode,user/checkemail,chat/default,api_article/newqlist,api_article/list,api_user/editpwdapi,api_user/loginoutapi,api_user/bindloginapi,api_user/loginapi,api_user/bindregisterapi,api_user/registerapi,index/taobao,question/searchkey,pccaiji_catgory/addtopic,pccaiji_catgory/selectlist,pccaiji_catgory/list,topic/search,buy/buydetail,buy/default,download/default,tags/default,new/maketag,tag/default,user/regtip,new/default,user/deletexinzhi,user/editxinzhi,user/addxinzhi,topic/userxinzhi,topic/getone,topic/catlist,topic/hotlist,user/login,user/logout,user/code,user/getpass,user/resetpass,index/help,js/view,attach/upload,user/xinzhi,user/attention_user,new/nosolvequs,new/asknosolve,question/movecategory,' . $this->user['regulars']);
-        
+        $regulars = explode(',', $routing);
       //  $regulars=array_merge($regulars,$this->regular);
       
         return in_array($url, $regulars);
