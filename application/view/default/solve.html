@@ -171,7 +171,7 @@
             <a href="{url user/space/$bestanswer['authorid']}" target="_blank" class="name">{$bestanswer['author']}</a> 
             <!---->
              <div class="meta">
-             <span>1楼 · {$bestanswer['format_time']}.<span class="text-danger"><i class="fa fa-check"></i>采纳回答</span></span>
+             <span>  {$bestanswer['format_time']}.<span class="text-danger"><i class="fa fa-check"></i>采纳回答</span></span>
              </div>
              </div>
              </div> 
@@ -185,11 +185,13 @@
                                     <!--{if $append['authorid']==$bestanswer['authorid']}-->
                                     <h4 class="appendanswer font-12">回答:<span class="time">
                                     {$bestanswer['format_time']}</span></h4>
+                                    <div >   {eval    echo replacewords($append['content']);    }</div>
                                     <!--{else}-->
                                     <h4 class="appendask font-12">作者追问:<span class='time'>{$bestanswer['format_time']}</span></h4>
+                                     <div class="zhuiwentext" >   {eval    echo replacewords($append['content']);    }</div>     
                                     <!--{/if}-->
-                                       <div class="zhuiwentext">   {eval    echo replacewords($append['content']);    }
-                                       </div>                         
+                                       
+                                                           
                                 <div class="clr"></div>
                                 </div>
                                 <!--{/loop}-->
@@ -245,7 +247,7 @@
             <a href="{url user/space/$answer['authorid']}" target="_blank" class="name">{$answer['author']}</a> 
             <!---->
              <div class="meta">
-             <span>{eval echo $nindex+2;}楼 · {$answer['time']}</span>
+             <span>{eval echo $nindex+1;}楼 · {$answer['time']}</span>
              </div>
              </div>
              </div> 
@@ -259,11 +261,13 @@
                                     <!--{if $append['authorid']==$answer['authorid']}-->
                                     <h4 class="appendanswer font-12">回答:<span class="time">
                                     {$append['format_time']}</span></h4>
+                                    <div>{eval echo replacewords($append['content']); }</div>
                                     <!--{else}-->
                                     <h4 class="appendask font-12">作者追问:<span class='time'>{$append['format_time']}</span></h4>
+                                     <div class="zhuiwentext">   {eval    echo replacewords($append['content']);    }
+                                       </div>  
                                     <!--{/if}-->
-                                       <div class="zhuiwentext">   {eval    echo replacewords($append['content']);    }
-                                       </div>                         
+                                                             
                                 <div class="clr"></div>
                                 </div>
                                 <!--{/loop}-->
