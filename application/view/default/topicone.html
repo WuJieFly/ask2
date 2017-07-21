@@ -289,8 +289,14 @@
             var imgurl = $(attr).find("img").attr("data-original");
             $(attr).find("img").attr("src", imgurl);
         }
-        $(attr).find("img").attr("data-toggle", "lightbox");
-        $(attr).find("img").attr("class", "img-thumbnail").css({ "display": "block", "margin-top": "3px" });
+        var list = $(attr).find("img");
+        list.each(function (index, el) {
+            if ($(el).attr("src").indexOf("wangeditor") == -1) {
+                $(el).attr("data-toggle", "lightbox");
+                $(el).attr("class", "img-thumbnail").css({ "display": "block", "margin-top": "3px" })
+            }
+
+        });
     }
 
     changelightbox(".art-content");

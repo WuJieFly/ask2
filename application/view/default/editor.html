@@ -29,16 +29,44 @@ var isueditor=0;
 		editor.config.uploadImgUrl = g_site_url+"index.php?attach/upimg" ;
 		editor.config.uploadImgFileName = 'wangEditorMobileFile';
 		// 阻止输出log
-	    wangEditor.config.printLog = false;
+		wangEditor.config.printLog = false;
+
+    //自定义表情包
+		editor.config.emotions ={
+		    'qq':{
+		        title:'QQ表情',
+		        data:'{SITE_URL}static/js/wangeditor/face/qq.data'
+
+		    }
+		};
+
+
+
+
+
+
+
+
+
+
     // 普通的自定义菜单 {$setting['editor_wtoolbars']}
    
+
+
+
+
+
+
 	    editor.config.menus = [
 	                       
 
 {$setting['editor_wtoolbars']}
 	     ];
 	    // 将全屏时z-index修改为20000
-	   // editor.config.zindex =-1;
+    // editor.config.zindex =-1;
+
+
+
     editor.create();
 $(".wangEditor-container").css("z-index","1");
 

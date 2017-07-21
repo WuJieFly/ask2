@@ -272,9 +272,10 @@ try{
 
     /* 添加追问--追问--回答 */
 
-    function append($answerid, $author, $authorid, $content ) {
+    function append($answerid, $author, $authorid, $content ,$qid =0 ) {
     	 $content=checkwordsglobal( $content);
     	   $content=checkwordsglobal( $content);
+           ($qid!=0)&& $this->db->query("UPDATE `".DB_TABLEPRE."question` SET answers = answers+1 WHERE id =$qid");
            $this->db->query("UPDATE `".DB_TABLEPRE."user` SET answers =answers+1 WHERE uid ='$authorid'");
         $this->db->query("INSERT INTO " . DB_TABLEPRE . "answer_append(appendanswerid,answerid,author,authorid,content, time) VALUES (NULL,$answerid,'$author',$authorid,'$content',{$this->base->time})");
         

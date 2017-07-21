@@ -719,8 +719,16 @@ $("#invitationanswer").click(function(){
           var imgurl=$(val).find("img").attr("data-original");
           $(val).find("img").attr("src",imgurl);
       }
-      $(val).find("img").attr("data-toggle","lightbox");
-      $(val).find("img").attr("class","img-thumbnail").css({"display":"block","margin-top":"3px"});
+      
+      var list = $(val).find("img");
+      list.each(function(index,el){
+          if ($(el).attr("src").indexOf("wangeditor")==-1) {
+              $(el).attr("data-toggle","lightbox");
+              $(el).attr("class","img-thumbnail").css({"display":"block","margin-top":"3px"})
+          }
+
+      });
+
   }
   changelightbox(".show-content");
   changelightbox(".comment-wrap");//回答也需要用到
@@ -758,7 +766,10 @@ $("#invitationanswer").click(function(){
       
  }
  
-	$(function(){
+  $(function(){
+
+
+
 		  initcategory(category1);
           fillcategory(category2, $("#category1 option:selected").val(), "category2");
           fillcategory(category3, $("#category2 option:selected").val(), "category3");

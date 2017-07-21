@@ -185,13 +185,36 @@ function listertext(){
 		 $(".code_hint").hide();
 	 }
 }
-if(typeof($(".art-content").find("img").attr("data-original"))!="undefined"){
-	var imgurl=$(".art-content").find("img").attr("data-original");
-	$(".art-content").find("img").attr("src",imgurl);
+
+function changelightbox(val) {
+    if(typeof($(val).find("img").attr("data-original"))!="undefined"){
+        var imgurl=$(val).find("img").attr("data-original");
+        $(val).find("img").attr("src",imgurl);
+    }
+
+
+    var list = $(val).find("img");
+    list.each(function(index,el){
+        if ($(el).attr("src").indexOf("wangeditor")==-1) {
+            $(el).attr("data-toggle","lightbox");
+            $(el).attr("class","img-thumbnail").css({"display":"block","margin-top":"3px"})
+        }
+
+    });
+
 }
-$(".art-content").find("img").attr("data-toggle","lightbox");
-$(".art-content").find("img").attr("class","img-thumbnail").css({"display":"block","margin-top":"3px"});
+
+
+
+changelightbox(".art-content");
+changelightbox(".comment-wrap");
+
+
+
+
 $(function(){
+
+
 
 		//微信二维码生成
 		$('#qr_wxcode').qrcode("{url note/view/$note['id']}");
