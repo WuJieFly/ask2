@@ -4164,6 +4164,7 @@
     <Folder Include="static\css\static" />
     <Folder Include="static\css" />
     <Folder Include="static\images" />
+    <Folder Include="static\js\autocomplete\" />
     <Folder Include="static\js\editor\dialogs\attachment\fileTypeImages" />
     <Folder Include="static\js\editor\dialogs\attachment" />
     <Folder Include="static\js\editor\dialogs\image\images" />
@@ -4291,7 +4292,12 @@
     <Content Include="static\css\bianping\css\usercard.css" />
     <Content Include="static\css\bianping\images\cli_300_2px.png" />
     <Content Include="static\css\bianping\js\navstatus.js" />
+    <Content Include="static\css\images\caina.png" />
+    <Content Include="static\css\images\customerCode.png" />
     <Content Include="static\css\images\load.gif" />
+    <Content Include="static\css\images\zhiding.png" />
+    <Content Include="static\js\autocomplete\jquery.autocomplete.js" />
+    <Content Include="static\js\jquery.cookie.js" />
     <Content Include="static\js\wangeditor\face\1.gif" />
     <Content Include="static\js\wangeditor\face\10.gif" />
     <Content Include="static\js\wangeditor\face\11.gif" />

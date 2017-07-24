@@ -111,6 +111,10 @@
         }
     });
 
+    $.cookie("language", 'zh-CN', { expires: 7 }); //设置默认语言
+
+
+    alert($.cookie('language'));
 
     $("#login_submit").click(function () {
         var _forward = $("#forward").val();
