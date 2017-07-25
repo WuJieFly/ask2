@@ -6,6 +6,7 @@ define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc());
 require ASK2_ROOT . '/lib/db.class.php';
 require ASK2_ROOT . '/lib/global.func.php';
 require ASK2_ROOT . '/lib/cache.class.php';
+require ASK2_ROOT . '/lib/langconv.func.php';
 require ASK2_APP_ROOT . '/model/base.class.php';
  
 
