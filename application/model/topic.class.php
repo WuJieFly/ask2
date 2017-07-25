@@ -796,6 +796,28 @@ class topicmodel
         return $topiclist;
     }
 
+    function update_category($tid,$cid ,$cid1,$cid2,$cid3){
+        //分类移动简单做法， 先把原来分类 问题先减掉；
+        //统一加上所属分类的数量
+        //这样就不用考虑 分类变化的问题，也比较通用
+        $oldques = $this->db->fetch_first("SELECT  cid1 ,cid2 ,cid3  from ".DB_TABLEPRE."topic where `id` =$tid"); //难道能移动多个问题分类嘛？
+        $this->db->query("UPDATE `" . DB_TABLEPRE . "topic` SET `articleclassid`=$cid,`cid1`=$cid1,`cid2`=$cid2,`cid3`=$cid3 WHERE `id`in ($tid)");
+        $this->db->query("UPDATE ".DB_TABLEPRE."category SET topics=topics-1 WHERE  id IN (".$oldques['cid1'].",".$oldques['cid2'].",".$oldques['cid3'].")");
+        $this->db->query("UPDATE ".DB_TABLEPRE."category SET topics =topics+1 WHERE id in($cid1,$cid2,$cid3)");
+        
+        if ($this->base->setting['xunsearch_open']) {
+            $topic = array();
+            $topic['id'] = $tid;
+            $topic['cid'] = $cid;
+            $topic['cid1'] = $cid1;
+            $topic['cid2'] = $cid2;
+            $topic['cid3'] = $cid3;
+            $doc = new XSDocument;
+            $doc->setFields($topic);
+            $this->index->update($doc);
+        }
+    }
+    
     function get_list_bycidanduid($cid, $uid, $start = 0, $limit = 6)
     {
         $topiclist = array();

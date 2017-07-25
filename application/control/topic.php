@@ -575,6 +575,7 @@ foreach ($topiclist as $key=>$val){
      $taglist = $_ENV['topic_tag']->get_by_aid($topicone['id']);
      $cid=$topicone['articleclassid'];
      $category = $this->category[$cid]; //得到分类信息
+     $categoryjs = $_ENV['category']->get_js();
          $ctopiclist = $_ENV['topic']->get_bycatid($cid);  
             $cfield = 'cid' . $category['grade'];
      // $questionlist=$_ENV['question']->list_by_condition(" ");
@@ -643,7 +644,31 @@ foreach ($topiclist as $key=>$val){
     }
     
     
-    
+    function onmovecategory(){
+        if (intval($this->post['category'])) {
+            $cid = intval($this->post['category']);
+            $cid1 = 0;
+            $cid2 = 0;
+            $cid3 = 0;
+            $qid = $this->post['qid'];
+            $viewurl = urlmap('topic/getone/' . $qid, 2);
+            $category = $this->cache->load('category');
+            if ($category[$cid]['grade'] == 1) {
+                $cid1 = $cid;
+            } else if ($category[$cid]['grade'] == 2) {
+                $cid2 = $cid;
+                $cid1 = $category[$cid]['pid'];
+            } else if ($category[$cid]['grade'] == 3) {
+                $cid3 = $cid;
+                $cid2 = $category[$cid]['pid'];
+                $cid1 = $category[$cid2]['pid'];
+            } else {
+                $this->message('分类不存在，请更下缓存!', $viewurl);
+            }
+            $_ENV['topic']->update_category($qid, $cid, $cid1, $cid2, $cid3);
+            $this->message('文章分类修改成功!', $viewurl);
+        }
+    }
     
 
     function onuserxinzhi(){

@@ -76,6 +76,14 @@
                      {/if}
 
                       {/if}
+
+                      <li>
+
+                          <a id ="changecategory" data-toggle ="modal" data-target="#catedialog">
+                              <i class="fa fa-edit"></i><span>移动分类</span>
+                          </a>
+                      </li>
+
                            <li>
                   
                     <a href="{url user/editxinzhi/$topicone['id']}">
@@ -115,6 +123,9 @@
                 </div>
             </div>
         </div>
+
+
+
 
     <div class="meta-bottom">
       <div class="like"><div class="btn like-group"><div class="btn-like"><a href="{url favorite/topicadd/$topicone['id']}"><i class="fa fa-heart-o"></i>关注</a></div> <div class="modal-wrap"><a> {$topicone['likes']}</a></div></div> <!----></div>
@@ -276,6 +287,64 @@
    </div>
 </div>
 </div>
+
+ <!--{if 1==$user['grouptype'] && $user['uid']}-->
+<div class="modal fade" id="catedialog">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+      <h4 class="modal-title">修改分类</h4>
+    </div>
+    <div class="modal-body">
+    
+      <div id="dialogcate">
+        <form class="form-horizontal"  name="editcategoryForm" action="{url topic/movecategory}" method="post">
+            <input type="hidden" name="qid" value="{$topicone['id']}" />
+            <input type="hidden" name="category" id="categoryid" />
+            <input type="hidden" name="selectcid1" id="selectcid1" value="{$topicone['cid1']}" />
+            <input type="hidden" name="selectcid2" id="selectcid2" value="{$topicone['cid2']}" />
+            <input type="hidden" name="selectcid3" id="selectcid3" value="{$topicone['cid3']}" />
+            <table class="table ">
+                <tr valign="top">
+                    <td >
+                        <select  id="category1" class="catselect" size="8" name="category1" ></select>
+                    </td>
+                    <td align="center" valign="middle" ><div style="display: none;" id="jiantou1">>></div></td>
+                    <td >                                        
+                        <select  id="category2"  class="catselect" size="8" name="category2" style="display:none"></select>                                        
+                    </td>
+                    <td align="center" valign="middle" ><div style="display: none;" id="jiantou2">>>&nbsp;</div></td>
+                    <td >
+                        <select id="category3"  class="catselect" size="8"  name="category3" style="display:none"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                   
+                   
+                <span>
+                    <input  type="submit" class="btn btn-success" value="确&nbsp;认" onclick="change_category();"/></span>
+                    <span>
+                    <button type="button" class="btn btn-default mar-lr-1" data-dismiss="modal">关闭</button>
+                    </span>
+                
+              
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    </div>
+   
+  </div>
+</div>
+</div>
+  <!--{/if}-->
+
+
+
 <div class="modal share-wechat animated" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" data-dismiss="modal" class="close">×</button></div> <div class="modal-body"><h5>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</h5> <div data-url="{url topic/getone/$topicone['id']}" class="qrcode" title="{url topic/getone/$topicone['id']}"><canvas width="170" height="170" style="display: none;"></canvas>
 <div id="qr_wxcode">
 </div></div></div> <div class="modal-footer"></div></div></div></div>
@@ -303,12 +372,44 @@
     changelightbox(".comment-wrap");
 
 
-
+    
+    var category1 = {$categoryjs[category1]};
+    var category2 = {$categoryjs[category2]};
+    var category3 = {$categoryjs[category3]};
+    var selectedcid = "{$topicone['cid1']},{$topicone['cid2']},{$topicone['cid2']}";
+    //修改分类
+    function change_category() {
+        var category1 = $("#category1 option:selected").val();
+        var category2 = $("#category2 option:selected").val();
+        var category3 = $("#category3 option:selected").val();
+        if (category1 > 0) {
+            $("#categoryid").val(category1);
+        }
+        if (category2 > 0) {
+            $("#categoryid").val(category2);
+        }
+        if (category3 > 0) {
+            $("#categoryid").val(category3);
+        }
+        $("#catedialog").model("hide");
+        $("form[name='editcategoryForm']").submit();
+    }
+    //投诉
+    //function openinform(qid ,qtitle,aid) {
+    //    $("#myqid").val(qid);
+    //    $("#myqtitle").val(qtitle);
+    //    $("#myaid").val(aid);
+    //    $('#dialog_inform').modal('show');
+      
+    //}
 
 
 
 
 $(function(){
+    initcategory(category1);
+    fillcategory(category2, $("#category1 option:selected").val(), "category2");
+    fillcategory(category3, $("#category2 option:selected").val(), "category3");
 
 		//微信二维码生成
 		$('#qr_wxcode').qrcode("{url topic/getone/$topicone['id']}");
