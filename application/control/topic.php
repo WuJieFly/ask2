@@ -81,9 +81,11 @@ var $whitelist;
             
             foreach ($sublist as $key => $val)
             {
-            	$relrownum= $_ENV['topic']->rownum_by_title($word,'cid'.$val['grade'],$val['id']);
+            	$relrownum= $_ENV['topic']->rownum_by_title_sub($word,'cid'.$val['grade'],$val['id']);
                 $sublist[$key]['topics']=$relrownum;
             }
+          
+            
             
 
           

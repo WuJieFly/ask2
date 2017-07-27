@@ -7,19 +7,19 @@ class topicmodel
 
     var $db;
     var $base;
-    var $index;
     var $search;
-
+    var $xs;
+    
     function topicmodel(&$base)
     {
 
         $this->base = $base;
         $this->db = $base->db;
         if ($this->base->setting['xunsearch_open']) {
-            require_once $this->base->setting['xunsearch_sdk_file'];
-            $xs = new XS('topic');
-            $this->search = $xs->search;
-            $this->index = $xs->index;
+            require ASK2_APP_ROOT."/model/topicxs.class.php";
+            $this->xs = new topicxsclass($this->db,$this->base->setting['xunsearch_sdk_file']);
+            $this->search =$this->getxssearch(); 
+            
         }
     }
 
@@ -61,30 +61,71 @@ class topicmodel
         return $topic;
     }
 
-    /*要进行修改  */
+    
+    private function  getxssearch(){
+        $search = null;
+        $identity = $this->base->user['identity']; //顾问
+        if (($identity==0|| $identity==2)&&$this->base->user['username']!='admin')
+        {
+            $search = $this->xs->searchadv;
+        }else if($identity==3&&$this->base->user['username']!='admin'){ //客户
+            $search = $this->xs->searchfoss;
+        }else 
+        {
+            $search = $this->xs->search;
+        }
+        return $search;
+            
+        
+    
+        
+    }
+    
+    
+    
+    private function querydata($word,$cfield='cid1',$cid=0,$limit=6,$start=0)
+    {
+        $result = array();
+        if ($cfield!='')
+        {
+            $result = $this->search->setQuery($word)->addRange($cfield,$cid,$cid)->setLimit($limit,$start)->search();
+           // print_r($this->search->query);
+        }else
+        {
+            $result = $this->search->setQuery($word)->setLimit($limit,$start)->search();
+            //print_r($this->search->query);
+        }
+        return $result;
+    }
+    
+    
+    //$value > $from && $value <= $to 
+    //identity  身份(0.无 1.研发 2.顾问 3.客户)
+    //authoritycontrol   1研发  2 顾问
+    //
+    /*启用讯搜 */
     function get_bylikename($word, $start = 0, $limit = 6 ,$cfield='cid1',  $cid=0)
     {
+
         $topiclist = array();
         if ($this->base->setting['xunsearch_open']) {
-           
-            $result = $this->search->setQuery($word) ->setLimit($limit, $start)->search();
-            foreach ($result as $doc) {
-                $isAdd = false;
-                $cainfo =  $this->base->getcategory($doc->articleclassid);
-                //用户是顾问则只查询 authoritycontrol = 2
-                if ($this->base->user['identity'] != 1 && $this->base->user['username'] != 'admin' ) {
-                    if($doc->authoritycontrol ==2) {
-                        $isAdd = true;
-                    }
-                }else if($this->base->user['identity'] == 3){
-                    if($cainfo['isFOSS'] ==1 && $doc->authoritycontrol ==2){
-                        $isAdd = true;
-                    }
-                }else{
-                    $isAdd = true;
-                }
-                if ($isAdd==true) {
-                    $topic = array();
+            $result = array();
+            try
+            {
+                $result= $this->querydata($word,$cfield,$cid,$limit,$start);
+            }
+            catch (XSException  $e)
+            {
+                echo $e;
+                //echo $e->getTraceAsString();
+              
+            }
+
+            
+            foreach ($result as $doc)
+            { 
+                   $topic = array();
+                   $cainfo =  $this->base->getcategory($doc->articleclassid);
                     $topic['id'] = $doc->id;
                     $question['cid'] = $doc->articleclassid;
                     $question['category_name'] =$cainfo['name'];
@@ -107,13 +148,9 @@ class topicmodel
                     $topic['format_time'] = tdate($doc->viewtime);
                     $topic['viewtime'] = tdate($doc->viewtime);
                     $topiclist[] = $topic;
-                }
+                 
+            	
             }
-            if (count($topiclist) == 0) {
-
-                $topiclist = $this->get_by_likename($word, $start, $limit);
-            }
-
 
         } else {
             
@@ -580,7 +617,9 @@ class topicmodel
     function rownum_by_title($word ,$cfield='cid1',  $cid=0)
     {
         if ($this->base->setting['xunsearch_open']) {
-            $rownum = $this->search->getLastCount();
+            
+           $rownum= $this->search->getLastCount();
+          
         } else {
             $condition='1=1';
             ($cfield&&$cid!='all')&&$condition.=" and $cfield=$cid ";
@@ -600,6 +639,41 @@ class topicmodel
         }
         return $rownum;
     }
+    
+    /*子分类搜索数量预估*/
+    
+    function rownum_by_title_sub($word,$cfield='cid1',$cid=0){
+        if ($this->base->setting['xunsearch_open']) {
+            $rownum = 0;
+            if ($cfield!='')
+            {
+                $this->search->setQuery($word)->addRange($cfield,$cid,$cid)->search();
+            	$rownum = $this->search->count();
+            }else  {
+                 $this->search->setQuery($word)->search();
+                $rownum =$this->search->count();
+            }     
+            
+        } else {
+            $condition='1=1';
+            ($cfield&&$cid!='all')&&$condition.=" and $cfield=$cid ";
+            //用户是顾问则只查询 authoritycontrol = 2
+            if ($this->base->user['identity']==2){
+                $rownum = $this->db->fetch_total('topic', " $condition and authoritycontrol=2  and (title like '%$word%' or describtion like '%$word%') ");
+            }else if($this->base->user['identity']==1||$this->base->user['username']=='admin') {
+                $rownum = $this->db->fetch_total('topic', " $condition and (title like '%$word%' or describtion like '%$word%') ");
+            }else if($this->base->user['identity']==3){
+                //如果是客户，只选择属于它的分类
+                $sql = "SELECT COUNT(*) num FROM " . DB_TABLEPRE . "topic as t," . DB_TABLEPRE . "category as ca WHERE t.articleclassid = ca.id and ca.isFOSS = 1 and t.authoritycontrol=2 and (t.title like '%$word%' or t.describtion like '%$word%') and ";
+                $sql .= $condition;
+                $rownum = $this->db->result_first($sql);
+            }else{ //如果用户没有登录 查询authoritycontrol=0
+                $rownum = $this->db->fetch_total('topic', " $condition and  authoritycontrol=0 and  (title like '%$word%' or describtion like '%$word%') ");
+            }
+        }
+        return $rownum;
+    }
+    
     function checkisallowed($topic){
         if($this->base->user['identity']==3) {
             $ca = $this->base->getcategory($topic['articleclassid']);
@@ -1079,34 +1153,9 @@ class topicmodel
     function makeindex()
     {
         if ($this->base->setting['xunsearch_open']) {
-            $this->index->clean();
-            $query = $this->db->query("SELECT * FROM " . DB_TABLEPRE . "topic ");
-            while ($topic = $this->db->fetch_array($query)) {
-                $data = array();
-              
-                $data['id'] = $topic['id'];
-                $data['articleclassid'] = $topic['articleclassid'];
-                $data['image'] = $topic['image'];
-                $data['author'] = $topic['author'];
-                $data['authorid'] = $topic['authorid'];
-                $data['authoritycontrol'] = $topic['authoritycontrol'];
-                $data['views'] = $topic['views'];
-                $data['articles'] = $topic['articles'];
-                $data['likes'] = $topic['likes'];
-                $data['viewtime'] = $topic['viewtime'];
-           
-                $data['cid1']= $topic['cid1'];
-                $data['cid2']= $topic['cid2'];
-                $data['cid3']= $topic['cid3'];
-
-                $data['title'] = $topic['title'];
-                $data['describtion'] = $topic['describtion'];
-                $doc = new XSDocument;
-             
-                $doc->setFields($data);
-                $this->index->add($doc);
-           
-            }
+            $this->xs->makeindex();
+            $this->xs->makeindexadv();
+            $this->xs->makeindexfoss();
         }
     }
 

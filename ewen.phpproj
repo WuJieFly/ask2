@@ -125,6 +125,7 @@
     <Compile Include="application\model\tongji.class.php" />
     <Compile Include="application\model\topic.class.php" />
     <Compile Include="application\model\topicclass.class.php" />
+    <Compile Include="application\model\topicxs.class.php" />
     <Compile Include="application\model\topic_tag.class.php" />
     <Compile Include="application\model\ucenter.class.php" />
     <Compile Include="application\model\user.class.php" />
@@ -4894,6 +4895,7 @@
     <Compile Include="mobilecheck.php" />
     <Compile Include="readMe.md" />
     <Compile Include="robots.txt" />
+    <Compile Include="xunsearch.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="application\control\admin" />
