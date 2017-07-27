@@ -205,8 +205,11 @@ foreach ($topiclist as $key=>$val){
             
             foreach ($favusers as $fav)
             {
-            	$msginfo = $_ENV['email_msg']->topic_ans_fav($fav['realname'],$title,$weburl);
-                $this->sendmsg($fav,$msginfo['title'],$msginfo['content']);
+                //当文章有新评论时，消息发送给关注该文章的粉丝之前，先判断 该粉丝的接收通知设定
+                if(strpos($fav['receivemsg'],'T')!==false) {
+                    $msginfo = $_ENV['email_msg']->topic_ans_fav($fav['realname'], $title, $weburl);
+                    $this->sendmsg($fav, $msginfo['title'], $msginfo['content']);
+                }
             }
             
     		$message['state']=1;
@@ -312,7 +315,10 @@ foreach ($topiclist as $key=>$val){
   */
 
  function ondefault(){
-
+     if ($this->user['uid'] == 0 || $this->user['uid'] == null) {
+         header("location:user/login");
+         exit();
+     }
 
      $cid =intval($this->get[2])?$this->get[2]:'all';
      @$page =max(1,intval($this->get[3]));
@@ -547,7 +553,10 @@ foreach ($topiclist as $key=>$val){
     }
 
     function ongetone(){
-    	
+        if ($this->user['uid'] == 0 || $this->user['uid'] == null) {
+            header("location:user/login");
+            exit();
+        }
     	$useragent = $_SERVER['HTTP_USER_AGENT']; 
  
       
@@ -568,7 +577,8 @@ foreach ($topiclist as $key=>$val){
         $count = count($nav_article);
         for ($i = 0; $i < $count; $i++)
         {
-            $toptemp.=$nav_article[$i]['name'].'/';
+            $categoryurl = '<a style="color: #777;" href="'.SITE_URL.'?topic/default/'.$nav_article[$i]['id'].'">'.$nav_article[$i]['name'].'/ </a>';
+            $toptemp.= $categoryurl;
         }
         $toptemp= substr($toptemp,1,strlen($toptemp)-1);
         $nav_article=$toptemp;

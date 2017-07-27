@@ -619,8 +619,11 @@ class questioncontrol extends base
 
     function onview()
     {
+        if ($this->user['uid'] == 0 || $this->user['uid'] == null) {
+            header("location:user/login");
+            exit();
+        }
         //先检查是否有权限查看
-
         $useragent = $_SERVER['HTTP_USER_AGENT'];
 
 
@@ -702,7 +705,8 @@ class questioncontrol extends base
         $count = count($nav_ques);
         for ($i = 0; $i < $count; $i++)
         {
-            $quetemp.=$nav_ques[$i]['name'].'/';
+            $categoryurl = '<a style="color: #777;" href="'.SITE_URL.'?new/default/'.$nav_ques[$i]['id'].'">'.$nav_ques[$i]['name'].'/ </a>';
+            $quetemp.=$categoryurl;
         }
         $quetemp= substr($quetemp,1,strlen($quetemp)-1);
         $nav_ques=$quetemp;
