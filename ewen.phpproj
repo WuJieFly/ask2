@@ -117,6 +117,7 @@
     <Compile Include="application\model\note_comment.class.php" />
     <Compile Include="application\model\question.class.php" />
     <Compile Include="application\model\question1.class.php" />
+    <Compile Include="application\model\questionxs.class.php" />
     <Compile Include="application\model\recommend.class.php" />
     <Compile Include="application\model\setting.class.php" />
     <Compile Include="application\model\sitelog.class.php" />

@@ -1673,7 +1673,7 @@ class questioncontrol extends base
         
         foreach ($sublist as $key => $val)
         {
-            $relrownum= $_ENV['question']->search_title_num($word,$qstatus,'cid'.$val['grade'],$val['id']);
+            $relrownum= $_ENV['question']->search_title_num_sub($word,$qstatus,'cid'.$val['grade'],$val['id']);
             $sublist[$key]['topics']=$relrownum;
         }
         

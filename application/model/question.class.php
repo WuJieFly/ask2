@@ -8,7 +8,7 @@ class questionmodel
     var $db;
     var $base;
     var $search;
-    var $index;
+    var $xs;
     var $statustable = array(
         'all' => ' AND status<>0 ',
         '0' => ' AND status=0',
@@ -28,23 +28,65 @@ class questionmodel
         '9' => ' AND status=9  ORDER BY shangjin DESC,hasvoice DESC,time DESC'
     );
 
+    
+    
     function questionmodel(&$base)
     {
         $this->base = $base;
         $this->db = $base->db;
         if ($this->base->setting['xunsearch_open']) {
-            require_once $this->base->setting['xunsearch_sdk_file'];
+            require ASK2_APP_ROOT."/model/questionxs.class.php";
+        
+            $this->xs = new questionxsclass($this->db,$this->base->setting['xunsearch_sdk_file']);
 
-            $xs = new XS('question');
-
-            $this->search = $xs->search;
-
-
-            $this->index = $xs->index;
-
+            $this->search = $this->getxssearch();
+            
+            
 
         }
     }
+    private function  getxssearch(){
+        $search = null;
+        $identity = $this->base->user['identity']; //顾问
+        if (($identity==0|| $identity==2)&&$this->base->user['username']!='admin')
+        {
+            $search = $this->xs->searchadv;
+        }else if($identity==3&&$this->base->user['username']!='admin'){ //客户
+            $search = $this->xs->searchfoss;
+        }else 
+        {
+            $search = $this->xs->search;
+        }
+        return $search;
+        
+        
+        
+        
+    }
+    
+    
+    
+    private function querydata($word,$cfield='cid1',$cid=0,$limit=6,$start=0)
+    {
+        $result = array();
+        if ($cfield!='')
+        {
+            $result = $this->search->setQuery($word)->addRange($cfield,$cid,$cid)->setLimit($limit,$start)->search();
+            // print_r($this->search->query);
+        }else
+        {
+            $result = $this->search->setQuery($word)->setLimit($limit,$start)->search();
+            //print_r($this->search->query);
+        }
+        return $result;
+    }
+    
+    
+    
+    
+    
+    
+    
 
     //设为已解决
     function change_to_solve($qids)
@@ -1021,6 +1063,7 @@ class questionmodel
         $this->db->query("UPDATE `" . DB_TABLEPRE . "question` SET `status`=$status1 WHERE `status`=$status2 AND `id` in ($qids)");
     }
 
+
     //根据标题搜索问题的结果数
     //修改成根据分类来获取结果数
     function search_title_num($title, $status = '1,2,6',$cfield='cid1',$cid)
@@ -1048,34 +1091,69 @@ class questionmodel
         }
         return $questionnum;
     }
-
+    
+    function search_title_num_sub($title,$status ='1,2,6',$cfield='cid1',$cid=0){
+        $questionnum = 0;
+        if ($this->base->setting['xunsearch_open']) {
+            if ($cfield !='')
+            {
+                $this->search->setQuery($title)->addRange($cfield,$cid,$cid)->search();
+            	$questionnum = $this->search->count();
+            }
+            else
+            {
+                $this->search->setQuery($title)->search();
+                $questionnum =$this->search->count();
+            }
+            
+            
+            
+        } else {
+            $condition = " STATUS IN ($status) AND title LIKE '%$title%' ";
+            ($cfield&&$cid!='all')&&$condition.=" AND $cfield = $cid ";
+            
+            //用户是顾问则只查询 authoritycontrol = 2
+            if ($this->base->user['identity'] == 2) {
+                $condition .= " AND authoritycontrol=2 ";
+            }else if($this->base->user['identity']==0&&$this->base->user['username']!='admin'){ //未认证的用户
+                $condition.= " AND  authoritycontrol=0 ";
+            }
+            if($this->base->user['identity'] == 3){
+                //如果是客户，只选择属于它的分类
+                $sql = "SELECT COUNT(*) num FROM " . DB_TABLEPRE . "question as t," . DB_TABLEPRE . "category as ca WHERE t.cid = ca.id and ca.isFOSS = 1 and ";
+                $sql .= $condition;
+                return $this->db->result_first($sql);
+            }
+            $questionnum = $this->db->fetch_total('question', $condition);
+        }
+        return $questionnum;
+    }
+    
+    //  去掉问题状态
+    //  需要的时候再处理
+    // range会影响  count数量
     //根据标题搜索问题
-    // 修改成根据分类来搜索问题
-    function search_title($title, $status = '1,2,6', $addbestanswer = 0, $start = 0, $limit = 20 ,$cfield='cid1',$cid)
+    // 修改成根据分类来搜索问题/*启用讯搜*/
+    function search_title($title, $status = '1,2,6', $addbestanswer = 0, $start = 0, $limit = 20 ,$cfield='cid1',$cid=0)
     {
         $questionlist = array();
         if ($this->base->setting['xunsearch_open']) {
-            $statusarr = explode(",", $status);
-            $size = count($statusarr);
-            $to = $statusarr[$size - 1];
-            $from = $statusarr[0];
-            $result = $this->search->setQuery($title)->addRange('status', $from, $to)->setLimit($limit, $start)->search();
+            //$statusarr = explode(",", $status);
+            //$size = count($statusarr);
+            //$to = $statusarr[$size - 1];
+            //$from = $statusarr[0];
+            $result = array();
+            try
+            {
+                $result = $this->querydata($title,$cfield,$cid,$limit,$start);
+            	
+            }
+            catch (XSException  $e )
+            {
+                echo $e;
+            }
             foreach ($result as $doc) {
-                $isAdd = false;
                 $cainfo =  $this->base->getcategory($doc->cid);
-                //用户是顾问则只查询 authoritycontrol = 2
-                if ($this->base->user['identity'] != 1 && $this->base->user['username'] != 'admin' ) {
-                    if($doc->authoritycontrol ==2) {
-                        $isAdd = true;
-                    }
-                }else if($this->base->user['identity'] == 3){
-                    if($cainfo['isFOSS'] ==1){
-                        $isAdd = true;
-                    }
-                }else{
-                    $isAdd = true;
-                }
-                if ($isAdd==true) {
                     $question = array();
                     $question['id'] = $doc->id;
                     $question['cid'] = $doc->cid;
@@ -1091,16 +1169,16 @@ class questionmodel
                     $question['status'] = $doc->status;
                     $question['format_time'] = tdate($doc->time);
                     $question['title'] = $this->search->highlight($doc->title);
-
+                    $question['description'] =$doc->description;
                     $question['avatar'] = get_avatar_dir($question['authorid']);
                     $question['description'] = $this->search->highlight(cutstr(checkwordsglobal(strip_tags($question['description'])), 240, '...'));
 
                     $questionlist[] = $question;
                 }
-            }
-            if (count($questionlist) == 0) {
-                $questionlist = $this->get_question_bytitle($title, $status, $addbestanswer, $start, $limit);
-            }
+            
+            //if (count($questionlist) == 0) {
+            //    $questionlist = $this->get_question_bytitle($title, $status, $addbestanswer, $start, $limit);
+            //}
 
 
         } else {
@@ -1234,30 +1312,9 @@ class questionmodel
     function makeindex()
     {
         if ($this->base->setting['xunsearch_open']) {
-            $this->index->clean();
-            $query = $this->db->query("SELECT * FROM " . DB_TABLEPRE . "question ");
-            while ($question = $this->db->fetch_array($query)) {
-                $data = array();
-                $data['id'] = $question['id'];
-                $data['cid'] = $question['cid'];
-                $data['cid1'] = $question['cid1'];
-                $data['cid2'] = $question['cid2'];
-                $data['cid3'] = $question['cid3'];
-                $data['author'] = $question['author'];
-                $data['authorid'] = $question['authorid'];
-                $data['authoritycontrol'] = $question['authoritycontrol'];
-                $data['answers'] = $question['answers'];
-                $data['price'] = $question['price'];
-                $data['attentions'] = $question['attentions'];
-                $data['shangjin'] = $question['shangjin'];
-                $data['status'] = $question['status'];
-                $data['time'] = $question['time'];
-                $data['title'] = $question['title'];
-                $data['description'] = $question['description'];
-                $doc = new XSDocument;
-                $doc->setFields($data);
-                $this->index->add($doc);
-            }
+            $this->xs->makeindex();
+            $this->xs->makeindexadv();
+            $this->xs->makeindexfoss();
         }
     }
     function get_askname_byid($qid){
