@@ -207,8 +207,11 @@ foreach ($topiclist as $key=>$val){
             
             foreach ($favusers as $fav)
             {
-            	$msginfo = $_ENV['email_msg']->topic_ans_fav($fav['realname'],$title,$weburl);
-                $this->sendmsg($fav,$msginfo['title'],$msginfo['content']);
+                //当文章有新评论时，消息发送给关注该文章的粉丝之前，先判断 该粉丝的接收通知设定
+                if(strpos($fav['receivemsg'],'T')!==false) {
+                    $msginfo = $_ENV['email_msg']->topic_ans_fav($fav['realname'], $title, $weburl);
+                    $this->sendmsg($fav, $msginfo['title'], $msginfo['content']);
+                }
             }
             
     		$message['state']=1;
@@ -314,7 +317,10 @@ foreach ($topiclist as $key=>$val){
   */
 
  function ondefault(){
-
+     if ($this->user['uid'] == 0 || $this->user['uid'] == null) {
+         header("location:user/login");
+         exit();
+     }
 
      $cid =intval($this->get[2])?$this->get[2]:'all';
      @$page =max(1,intval($this->get[3]));
@@ -549,7 +555,10 @@ foreach ($topiclist as $key=>$val){
     }
 
     function ongetone(){
-    	
+        if ($this->user['uid'] == 0 || $this->user['uid'] == null) {
+            header("location:user/login");
+            exit();
+        }
     	$useragent = $_SERVER['HTTP_USER_AGENT']; 
  
       
@@ -570,13 +579,15 @@ foreach ($topiclist as $key=>$val){
         $count = count($nav_article);
         for ($i = 0; $i < $count; $i++)
         {
-            $toptemp.=$nav_article[$i]['name'].'/';
+            $categoryurl = '<a style="color: #777;" href="'.SITE_URL.'?topic/default/'.$nav_article[$i]['id'].'">'.$nav_article[$i]['name'].'/ </a>';
+            $toptemp.= $categoryurl;
         }
         $toptemp= substr($toptemp,1,strlen($toptemp)-1);
         $nav_article=$toptemp;
      $taglist = $_ENV['topic_tag']->get_by_aid($topicone['id']);
      $cid=$topicone['articleclassid'];
      $category = $this->category[$cid]; //得到分类信息
+     $categoryjs = $_ENV['category']->get_js();
          $ctopiclist = $_ENV['topic']->get_bycatid($cid);  
             $cfield = 'cid' . $category['grade'];
      // $questionlist=$_ENV['question']->list_by_condition(" ");
@@ -645,7 +656,31 @@ foreach ($topiclist as $key=>$val){
     }
     
     
-    
+    function onmovecategory(){
+        if (intval($this->post['category'])) {
+            $cid = intval($this->post['category']);
+            $cid1 = 0;
+            $cid2 = 0;
+            $cid3 = 0;
+            $qid = $this->post['qid'];
+            $viewurl = urlmap('topic/getone/' . $qid, 2);
+            $category = $this->cache->load('category');
+            if ($category[$cid]['grade'] == 1) {
+                $cid1 = $cid;
+            } else if ($category[$cid]['grade'] == 2) {
+                $cid2 = $cid;
+                $cid1 = $category[$cid]['pid'];
+            } else if ($category[$cid]['grade'] == 3) {
+                $cid3 = $cid;
+                $cid2 = $category[$cid]['pid'];
+                $cid1 = $category[$cid2]['pid'];
+            } else {
+                $this->message('分类不存在，请更下缓存!', $viewurl);
+            }
+            $_ENV['topic']->update_category($qid, $cid, $cid1, $cid2, $cid3);
+            $this->message('文章分类修改成功!', $viewurl);
+        }
+    }
     
 
     function onuserxinzhi(){
