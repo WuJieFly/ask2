@@ -929,6 +929,7 @@ class topicmodel
    /*  更新文章多处用到        */
     function updatetopic($id, $title, $desrc, $filepath = '', $isphone = '', $views = '', $cid, $ispc = 0,$authoritycontrol,$cid1=0,$cid2=0,$cid3=0)
     {
+        
         if ($filepath)
             $this->db->query("UPDATE `" . DB_TABLEPRE . "topic` SET  `title`='$title' ,`describtion`='$desrc' , `image`='$filepath', 
             `isphone`='$isphone', `ispc`='$ispc', `views`='$views',`authoritycontrol`='$authoritycontrol',`articleclassid`='$cid',`cid1`='$cid1',`cid2`='$cid2',`cid3`='$cid3' WHERE `id`=$id");
