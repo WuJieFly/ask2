@@ -127,4 +127,31 @@ class questionxsclass
     }
     
     
+    
+    //更新问题索引
+    function updateindex($doc ,$authoridentity,$cid){
+        //根据用户来分类更新文章还是不准确
+        // 创建是根据  文章的属性创建的；
+        //分类也应该按照属性分类
+        //文件是不是分类文章   
+        
+        $count = $this->db->result_first("select count (*) from ".DB_TABLEPRE."question where   exists(select * from ".DB_TABLEPRE."category where isFOSS =1 and id = $cid)");
+        if ($count)
+        {
+            $this->index->update($doc);
+            $this->indexfoss->update($doc);
+        }else if($authoridentity==2){
+            $this->index->update($doc);
+            $this->indexadv->update($doc);
+        }else
+        {
+            $this->index->update($doc);
+        }
+        
+
+        
+        
+    }
+    
+    
 }

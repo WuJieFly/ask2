@@ -1049,7 +1049,7 @@ class topicmodel
             $topic['describtion'] = $desrc;
             $doc = new XSDocument;
             $doc->setFields($topic);
-            $this->index->update($doc);
+            $this->xs->updateindex($doc,$authoritycontrol,$cid);
         }
 
     }
