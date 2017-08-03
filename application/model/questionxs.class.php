@@ -59,6 +59,7 @@ class questionxsclass
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
             $data['title'] = $question['title'];
+            $data['supplysearch'] = $question['supplysearch'];
             $data['description'] = $question['description'];
             $doc = new XSDocument;
             $doc->setFields($data);
@@ -88,6 +89,7 @@ class questionxsclass
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
             $data['title'] = $question['title'];
+            $data['supplysearch'] = $question['supplysearch'];
             $data['description'] = $question['description'];
             $doc = new XSDocument;
             $doc->setFields($data);
@@ -118,6 +120,7 @@ class questionxsclass
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
             $data['title'] = $question['title'];
+            $data['supplysearch'] = $question['supplysearch'];
             $data['description'] = $question['description'];
             $doc = new XSDocument;
             $doc->setFields($data);
