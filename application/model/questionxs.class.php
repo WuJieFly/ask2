@@ -59,8 +59,8 @@ class questionxsclass
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
             $data['title'] = $question['title'];
-            $data['supplysearch'] = $question['supplysearch'];
-            $data['description'] = $question['description'];
+          
+            $data['description'] = $question['description'].$question['supplysearch'];
             $doc = new XSDocument;
             $doc->setFields($data);
             $this->index->add($doc);
@@ -89,8 +89,8 @@ class questionxsclass
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
             $data['title'] = $question['title'];
-            $data['supplysearch'] = $question['supplysearch'];
-            $data['description'] = $question['description'];
+        
+            $data['description'] = $question['description'].$question['supplysearch'];
             $doc = new XSDocument;
             $doc->setFields($data);
             $this->indexadv->add($doc);
@@ -120,8 +120,8 @@ class questionxsclass
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
             $data['title'] = $question['title'];
-            $data['supplysearch'] = $question['supplysearch'];
-            $data['description'] = $question['description'];
+        
+            $data['description'] = $question['description'].$question['supplysearch']; //搜索内容包括相关信息
             $doc = new XSDocument;
             $doc->setFields($data);
             $this->indexfoss->add($doc);

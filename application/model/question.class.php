@@ -980,16 +980,7 @@ class questionmodel
     {
         $this->db->query("UPDATE `" . DB_TABLEPRE . "question` SET `title`='$title',authoritycontrol = '$authoritycontrol',`description`='$content' WHERE `id`=$qid");
         $this->db->query("UPDATE `" . DB_TABLEPRE . "answer` SET `title`='$title' WHERE `qid`=$qid");
-        if ($this->base->setting['xunsearch_open']) {
-            $question = array();
-            $question['id'] = $qid;
-            $question['title'] = $title;
-            $question['authoritycontrol'] = $authoritycontrol;
-            $question['description'] = $content;
-            $doc = new XSDocument;
-            $doc->setFields($question);
-            $this->index->update($doc);
-        }
+        $this->updatequesindex($qid);
     }
 
     /* 是否关注问题 */
@@ -1012,6 +1003,65 @@ class questionmodel
         }
         return $followerlist;
     }
+    
+    //统一更新问题索引；现在发现只更新部分内容在搜索的时候会有问题
+    //索引只要更新就全部更新
+    function updatequesindex($qid){
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$question = $this->db->fetch_first("SELECT * from  ".DB_TABLEPRE."question where id =$qid");
+            $data = array();
+            $data['id'] = $question['id'];
+            $data['cid'] = $question['cid'];
+            $data['cid1'] = $question['cid1'];
+            $data['cid2'] = $question['cid2'];
+            $data['cid3'] = $question['cid3'];
+            $data['author'] = $question['author'];
+            $data['authorid'] = $question['authorid'];
+            $data['authoritycontrol'] = $question['authoritycontrol'];
+            $data['answers'] = $question['answers'];
+            $data['price'] = $question['price'];
+            $data['attentions'] = $question['attentions'];
+            $data['shangjin'] = $question['shangjin'];
+            $data['status'] = $question['status'];
+            $data['time'] = $question['time'];
+            $data['title'] = $question['title'];
+            
+            $data['description'] = $question['description'].$question['supplysearch'];
+            $doc = new XSDocument;
+            $doc->setFields($data);
+            $this->xs->updateindex($doc,$question['authoritycontrol'],$question['cid']);
+        }
+    }
+    
+    function updatesupplysearch($qid,$content){
+        $this->db->query("update ".DB_TABLEPRE."question SET supplysearch= CONCAT(IFNULL(supplysearch,''),'$content') where id =$qid ");
+        $this->updatequesindex($qid);
+    }
+    
+    function editesupplysearch($qid){
+        $question = $this->db->fetch_first(" SELECT tmp.qid, GROUP_CONCAT(tmp.content) AS anser, GROUP_CONCAT(tmp.zanswer) AS qanser,
+        CONCAT(IFNULL(GROUP_CONCAT(tmp.content),''),IFNULL( GROUP_CONCAT( tmp.zanswer),'')) AS finsh
+           FROM 
+(
+SELECT a.id, a.qid, a.content, GROUP_CONCAT(b.content) AS zanswer
+FROM ".DB_TABLEPRE."answer a
+LEFT JOIN ".DB_TABLEPRE."answer_append b ON a.id = b.answerid
+where a.qid ='$qid'
+GROUP BY a.id
+) tmp
+GROUP BY 
+tmp.qid
+");
+        $this->updatesupplysearch($qid,$question['finsh']);
+        
+        
+        
+    }
+  
+    
+    
+    
 
     //编辑问题分类
     function update_category($qids, $cid, $cid1, $cid2, $cid3)

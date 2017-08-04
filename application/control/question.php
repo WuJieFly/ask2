@@ -164,6 +164,7 @@ class questioncontrol extends base
 
 
         $_ENV['answer']->add($qid, $title, $content, $status, $chakanjine);
+        $_ENV['question']->updatesupplysearch($qid,$content); //提交回答直接更新问题搜索表并且重建索引
         //回答问题，添加积分
         $this->credit($this->user['uid'], $this->setting['credit1_answer'], $this->setting['credit2_answer']);
         //给提问者 关注着发送通知
@@ -1372,6 +1373,7 @@ class questioncontrol extends base
                 $status = 2;
             }
             $_ENV['answer']->update_content($aid, $content, $status);
+            $_ENV['question']->editesupplysearch($question['id']);//修改回答更新索引和搜索内容
             $quser = $_ENV['user']->get_by_uid($question['authorid']);
             //编辑问题答案通知作者和评论者
             global $setting;

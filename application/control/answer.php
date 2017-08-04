@@ -43,6 +43,7 @@ class answercontrol extends base {
             $flag = ($answer['authorid']==$this->user['uid'])?1:2;
             $_ENV['answer']->append($answer['id'], $this->user['realname'], $this->user['uid'], $this->post['content'],$qid);
             $_ENV['answer']->update_answerflag($aid,$flag);
+            $_ENV['question']->updatesupplysearch($qid,$this->post['content']); //回答追答更新问题搜索栏位
             if ($answer['authorid'] == $this->user['uid']) {//追答
               //通知给提问者
                 $qurl =' <br> <a href="' . url('question/view/' . $qid, 1) . '">点击查看问题</a>';
