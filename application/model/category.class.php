@@ -341,7 +341,7 @@ class categorymodel {
         if($this->base->user['identity'] == 3) {
             $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid and `isFOSS`=1 order by displayorder asc ");
         }else{
-            $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid order by displayorder asc ");
+            $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid  and `isFOSS`=0  order by displayorder asc ");
         }
 
         while ($category = $this->db->fetch_array($query)) {

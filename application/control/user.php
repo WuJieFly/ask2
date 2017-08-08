@@ -1152,7 +1152,8 @@ class usercontrol extends base
         $pagesize = $this->setting['list_default'];
         $startindex = ($page - 1) * $pagesize; //每页面显示$pagesize条
         $questionlist = $_ENV['question']->list_by_uid($this->user['uid'], $status, $startindex, $pagesize);
-        $questiontotal = intval($this->db->fetch_total('question', 'authorid=' . $this->user['uid'] . $_ENV['question']->statustable[$status]));
+        $questiontotal = $_ENV['question']->rownumbycondition('authorid=' . $this->user['uid']);
+        //$questiontotal = intval($this->db->fetch_total('question', 'authorid=' . $this->user['uid'] . $_ENV['question']->statustable[$status]));
         $departstr = page($questiontotal, $pagesize, $page, "user/ask/$status"); //得到分页字符串
         include template('myask');
     }
@@ -1189,7 +1190,7 @@ class usercontrol extends base
         $questionlist = $_ENV['question']->list_by_uid($uid, $status, $startindex, $pagesize);
         // print_r($questionlist);
         // exit();
-        $questiontotal = $_ENV['question']->rownumbycondition('authorid=' . $uid . $_ENV['question']->statustable[$status]);
+        $questiontotal = $_ENV['question']->rownumbycondition('authorid=' . $uid );
         //$questiontotal = $this->db->fetch_total('question', 'authorid=' . $uid . $_ENV['question']->statustable[$status]);
         $departstr = page($questiontotal, $pagesize, $page, "user/space_ask/$uid/$status"); //得到分页字符串
         include template('space_ask');

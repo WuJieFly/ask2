@@ -612,6 +612,11 @@ class questionmodel
         }
         return $questionlist;
     }
+    
+    
+    
+    
+    
     //某个用户的文章总数
     function rownumbycondition($condition){
         //用户是顾问则只查询 authoritycontrol = 2
@@ -626,7 +631,7 @@ class questionmodel
             $sql .= $condition;
             return $this->db->result_first($sql);
         }
-        return $this->db->fetch_total('topic',$condition);
+        return $this->db->fetch_total('question',$condition);
     }
     function checkisallowed($question){
         if($this->base->user['identity']==3) {
@@ -664,7 +669,7 @@ class questionmodel
             $sql .= " AND `authoritycontrol`=2 ";
         }
 
-        $sql .= $this->statustable[$status] . " ORDER BY `time` DESC LIMIT $start , $limit";
+        $sql .= " ORDER BY `time` DESC LIMIT $start , $limit"; //去掉状态选择
 
         $query = $this->db->query($sql);
         while ($question = $this->db->fetch_array($query)) {
