@@ -114,6 +114,7 @@
     <Compile Include="application\model\message.class.php" />
     <Compile Include="application\model\nav.class.php" />
     <Compile Include="application\model\note.class.php" />
+    <Compile Include="application\model\notexs.class.php" />
     <Compile Include="application\model\note_comment.class.php" />
     <Compile Include="application\model\question.class.php" />
     <Compile Include="application\model\questionxs.class.php" />

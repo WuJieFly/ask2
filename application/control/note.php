@@ -112,6 +112,36 @@ class notecontrol extends base {
         //cleardir(ASK2_ROOT . '/data/cache'); //清除缓存文件
         $this->message("公告首页置顶成功!");
     }
+    
+    
+    //公告的搜索
+    
+    function  onsearch(){
+        
+        $hidefooter='hidefooter';
+        
+        $type="note";
+        $word =urldecode($this->get[2]);
+        
+        $word = str_replace(array("\\","'"," ","/","&"),"", $word);
+        $word = strip_tags($word);
+        $word = htmlspecialchars($word);
+        $word = taddslashes($word, 1);
+        (!$word) && $this->message("搜索关键词不能为空!", 'BACK');
+        $navtitle = $word ;
+        $cid = intval($this->get[3])?$this->get[3]:'all';
+        @$page = max(1, intval($this->get[4]));
+        $pagesize = $this->setting['list_default'];
+        $startindex = ($page - 1) * $pagesize;
+        $seo_description=$word;
+        $seo_keywords= $word;
+        $topiclist=null;//定义空文章数组
+
+    }
+    
+    
+    
+    
 }
 
 ?>

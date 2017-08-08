@@ -6,10 +6,20 @@ class notemodel {
 
     var $db;
     var $base;
+    var $xs;
+    var $search;
+    
 
     function notemodel(&$base) {
         $this->base = $base;
         $this->db = $base->db;
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	require ASK2_APP_ROOT."/model/notexs.class.php";
+            $this->xs = new notexsclass($this->db,$this->base->setting['xunsearch_sdk_file']);
+            $this->search = $this->xs->search;
+        }
+        
     }
 
     function get($id) {
@@ -80,6 +90,39 @@ class notemodel {
     function remove_by_id($ids) {
         $this->db->query("DELETE FROM `" . DB_TABLEPRE . "note` WHERE `id` IN ($ids)");
     }
+    
+    function searchnote($keyword ,$start =0 , $limit =10){
+        $notelist = array();
+        if ($this->base->setting['xunsearch_open'])
+        {
+            $query =$this->search->setQuery($keyword)->setLimit($limit,$start)->search();
+            foreach ($query as $note)
+            {
+                $data = array();
+                $data['id'] = $note['id'];
+                $data['authorid'] = $note['authorid'];
+            	
+            }
+            
+        	
+        }
+        
+    
+    }
+    //更新索引
+    function makeindex(){
+    
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$this->xs->makeindex();
+        }
+        
+    }
+    
+    
+    
+    
+    
 
 }
 

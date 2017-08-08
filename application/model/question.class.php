@@ -96,15 +96,8 @@ class questionmodel
         $adoptime = $this->base->time;
         $this->db->query("UPDATE `" . DB_TABLEPRE . "question` set status=2, `endtime`=$endtime WHERE (status=6 OR status=1 OR status=9) AND answers>0 AND `id` in ($qids)");
         $this->db->query("UPDATE `" . DB_TABLEPRE . "answer` SET `adopttime`=$adoptime WHERE `qid` in ($qids)");
-        if ($this->base->setting['xunsearch_open']) {
-            foreach ($qids as $qid) {
-                $question = array();
-                $question['status'] = 2;
-                $doc = new XSDocument;
-                $doc->setFields($question);
-                $this->index->update($doc);
-            }
-        }
+      
+        $this->updatequesindex($qids);
     }
 
     /* 获取问题信息 */
@@ -374,7 +367,7 @@ class questionmodel
         //删除问题和回答后，用户信息的也同步更新
        
         if ($this->base->setting['xunsearch_open']) {
-            $this->index->del(explode(",", $qids));
+           $this->xs->delindex($qids);
         }
     }
 
@@ -761,7 +754,7 @@ class questionmodel
             $question['description'] = checkwordsglobal($description);
             $doc = new XSDocument;
             $doc->setFields($question);
-            $this->index->add($doc);
+            $this->xs->addindex($doc,$authoritycontrol,$cid);
         }
         $cid1 = intval($cid1);
         $cid2 = intval($cid2);
@@ -965,14 +958,16 @@ class questionmodel
     {
         $this->db->query("UPDATE `" . DB_TABLEPRE . "question` SET `title`='$title' WHERE `id`=$qid");
         $this->db->query("UPDATE `" . DB_TABLEPRE . "answer` SET `title`='$title' WHERE `qid`=$qid");
-        if ($this->base->setting['xunsearch_open']) {
-            $question = array();
-            $question['id'] = $qid;
-            $question['title'] = $title;
-            $doc = new XSDocument;
-            $doc->setFields($question);
-            $this->index->update($doc);
-        }
+        $this->updatequesindex($qid);
+        
+        //if ($this->base->setting['xunsearch_open']) {
+        //    $question = array();
+        //    $question['id'] = $qid;
+        //    $question['title'] = $title;
+        //    $doc = new XSDocument;
+        //    $doc->setFields($question);
+        //    $this->index->update($doc);
+        //}
     }
 
     //编辑问题内容
@@ -1073,20 +1068,9 @@ tmp.qid
         $this->db->query("UPDATE `" . DB_TABLEPRE . "question` SET `cid`=$cid,`cid1`=$cid1,`cid2`=$cid2,`cid3`=$cid3 WHERE `id`in ($qids)");
         $this->db->query("UPDATE ".DB_TABLEPRE."category SET questions=questions-1 WHERE  id IN (".$oldques['cid1'].",".$oldques['cid2'].",".$oldques['cid3'].")");
         $this->db->query("UPDATE ".DB_TABLEPRE."category SET questions =questions+1 WHERE id in($cid1,$cid2,$cid3)");
-            
-        if ($this->base->setting['xunsearch_open']) {
-            foreach ($qids as $qid) {
-                $question = array();
-                $question['id'] = $qid;
-                $question['cid'] = $cid;
-                $question['cid1'] = $cid1;
-                $question['cid2'] = $cid2;
-                $question['cid3'] = $cid3;
-                $doc = new XSDocument;
-                $doc->setFields($question);
-                $this->index->update($doc);
-            }
-        }
+       
+        $this->updatequesindex($qids);
+       
     }
 
     //设为待解决
@@ -1096,15 +1080,7 @@ tmp.qid
         $endtime = $this->base->time + $overdue_days * 86400;
         $this->db->query("UPDATE `" . DB_TABLEPRE . "question` set status=1, `endtime`=$endtime WHERE (status=6 OR status=2 OR status=9) AND `id` in ($qids)");
         $this->db->query("UPDATE `" . DB_TABLEPRE . "answer` SET `adopttime`=0 WHERE `qid` in ($qids)");
-        if ($this->base->setting['xunsearch_open']) {
-            foreach ($qids as $qid) {
-                $question = array();
-                $question['status'] = 1;
-                $doc = new XSDocument;
-                $doc->setFields($question);
-                $this->index->update($doc);
-            }
-        }
+        $this->updatequesindex($qids);
     }
 
     //问题推荐

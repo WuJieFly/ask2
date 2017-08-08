@@ -62,6 +62,42 @@ class topicmodel
     }
 
     
+    
+    
+    function updatetopicindex($tid){
+        if ($this->base->setting['xunsearch_open'])
+        {
+            $topic = $this->db->fetch_first("select * from ".DB_TABLEPRE."topic where id =$tid");
+            
+            $data = array();
+            $data['id'] = $topic['id'];
+            $data['articleclassid'] = $topic['articleclassid'];
+            $data['image'] = $topic['image'];
+            $data['author'] = $topic['author'];
+            $data['authorid'] = $topic['authorid'];
+            $data['authoritycontrol'] = $topic['authoritycontrol'];
+            $data['views'] = $topic['views'];
+            $data['articles'] = $topic['articles'];
+            $data['likes'] = $topic['likes'];
+            $data['viewtime'] = $topic['viewtime'];
+            
+            $data['cid1']= $topic['cid1'];
+            $data['cid2']= $topic['cid2'];
+            $data['cid3']= $topic['cid3'];
+
+            $data['title'] = $topic['title'];
+            $data['describtion'] = $topic['describtion'];
+            $doc = new XSDocument;
+            
+            $doc->setFields($data);
+            $this->xs->updateindex($doc,$topic['authoritycontrol'],$topic['articleclassid']);
+        	
+            
+        }
+        
+    }
+    
+    
     private function  getxssearch(){
         $search = null;
         $identity = $this->base->user['identity']; //顾问
@@ -879,17 +915,20 @@ class topicmodel
         $this->db->query("UPDATE ".DB_TABLEPRE."category SET topics=topics-1 WHERE  id IN (".$oldques['cid1'].",".$oldques['cid2'].",".$oldques['cid3'].")");
         $this->db->query("UPDATE ".DB_TABLEPRE."category SET topics =topics+1 WHERE id in($cid1,$cid2,$cid3)");
         
-        if ($this->base->setting['xunsearch_open']) {
-            $topic = array();
-            $topic['id'] = $tid;
-            $topic['cid'] = $cid;
-            $topic['cid1'] = $cid1;
-            $topic['cid2'] = $cid2;
-            $topic['cid3'] = $cid3;
-            $doc = new XSDocument;
-            $doc->setFields($topic);
-            $this->index->update($doc);
-        }
+        
+        
+        $this->updatetopicindex($tid);
+        //if ($this->base->setting['xunsearch_open']) {
+        //    $topic = array();
+        //    $topic['id'] = $tid;
+        //    $topic['cid'] = $cid;
+        //    $topic['cid1'] = $cid1;
+        //    $topic['cid2'] = $cid2;
+        //    $topic['cid3'] = $cid3;
+        //    $doc = new XSDocument;
+        //    $doc->setFields($topic);
+        //    $this->index->update($doc);
+        //}
     }
     
     function get_list_bycidanduid($cid, $uid, $start = 0, $limit = 6)
@@ -984,17 +1023,19 @@ class topicmodel
             $this->db->query("UPDATE `" . DB_TABLEPRE . "topic` SET  `title`='$title' ,`describtion`='$desrc' , `image`='$filepath'  WHERE `id`=$id");
         else
             $this->db->query("UPDATE `" . DB_TABLEPRE . "topic` SET  `title`='$title' ,`describtion`='$desrc'  WHERE `id`=$id");
-        if ($this->base->setting['xunsearch_open']) {
-            $topic = array();
-            $topic['id'] = $id;
+        
+        $this->updatetopicindex($id);
+        //if ($this->base->setting['xunsearch_open']) {
+        //    $topic = array();
+        //    $topic['id'] = $id;
 
-            $topic['image'] = $filepath;
-            $topic['title'] = $title;
-            $topic['describtion'] = $desrc;
-            $doc = new XSDocument;
-            $doc->setFields($topic);
-            $this->index->update($doc);
-        }
+        //    $topic['image'] = $filepath;
+        //    $topic['title'] = $title;
+        //    $topic['describtion'] = $desrc;
+        //    $doc = new XSDocument;
+        //    $doc->setFields($topic);
+        //    $this->index->update($doc);
+        //}
 
 
     }
@@ -1090,7 +1131,8 @@ class topicmodel
 
             $doc = new XSDocument;
             $doc->setFields($topic);
-            $this->index->add($doc);
+
+           // $this->xs->addindex($doc,);
         }
         return $aid;
     }
@@ -1132,7 +1174,7 @@ class topicmodel
 
             $doc = new XSDocument;
             $doc->setFields($topic);
-            $this->index->add($doc);
+            $this->xs->addindex($doc,$authoritycontrol,$articleclassid);
         }
         $cid1 = intval($cid1);
         $cid2 = intval($cid2);
@@ -1160,7 +1202,7 @@ class topicmodel
         $this->db->query("DELETE FROM `" . DB_TABLEPRE . "tid_qid` WHERE `tid` IN ($tids)");
 
         if ($this->base->setting['xunsearch_open']) {
-            $this->index->del(explode(",", $tids));
+            $this->xs->delindex($tids);
         }
     }
 

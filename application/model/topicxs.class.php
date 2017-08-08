@@ -46,6 +46,35 @@ class topicxsclass
   
   
   
+  //添加索引
+  //
+  function addindex($doc,$authoridentity ,$cid){
+      $count =0;
+      $count = $this->db->result_first("select count (*) from ".DB_TABLEPRE."question where   exists(select * from ".DB_TABLEPRE."category where isFOSS =1 and id = $cid)");
+      if ($count)
+      {
+          $this->index->add($doc);
+          $this->indexfoss->add($doc);
+          
+      }else if($authoridentity==2){
+          $this->index->add($doc);
+          $this->indexadv->add($doc);
+      }else
+      {
+          $this->index->add($doc);
+      }
+      
+      
+  }
+  
+  //删除索引
+  //直接在所有分词库里面删掉索引数据
+  function delindex($qids){
+      $this->index->del($qids);
+      $this->indexadv->del($qids);
+      $this->indexfoss->del($qids);
+  }
+  
   
   
   //文章分类一定会存在
@@ -67,9 +96,6 @@ class topicxsclass
       {
       	$this->index->update($doc);
       }
-      
-
-      
       
   }
   
