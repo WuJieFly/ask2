@@ -50,6 +50,7 @@
     <Compile Include="application\control\admin\user.php" />
     <Compile Include="application\control\admin\usergroup.php" />
     <Compile Include="application\control\admin\word.php" />
+    <Compile Include="application\control\allsearch.php" />
     <Compile Include="application\control\api\user.php" />
     <Compile Include="application\control\pccaiji\catgory.php" />
     <Compile Include="application\control\plugin\plugin.php" />
@@ -5273,11 +5274,13 @@
     <Folder Include="static" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="application\view\default\allsearch.html" />
     <Content Include="application\view\default\editor.html" />
     <Content Include="application\view\default\myattention_topic.html" />
     <Content Include="application\view\default\myxinzhi.html" />
     <Content Include="application\view\default\noasknosolve.html" />
     <Content Include="application\view\default\nosolvequs.html" />
+    <Content Include="application\view\default\notesearch.html" />
     <Content Include="application\view\default\sider_alluser.html" />
     <Content Include="lib\mediawiki\mediawiki-1.15.2\AdminSettings.sample" />
     <Content Include="lib\mediawiki\mediawiki-1.15.2\api.php5" />

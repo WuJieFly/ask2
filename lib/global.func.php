@@ -215,6 +215,7 @@ function urlmap($var, $direction = 1) {
         'c-' => 'category/view/',
         'l-' => 'category/list/',
         'r-' => 'category/recommend/',
+        'search-'=> 'allsearch/default/',
         'u-' => 'user/space/',
         'ua-'=>'user/space_answer/',
      'uask-'=>'user/space_ask/',

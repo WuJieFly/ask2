@@ -648,7 +648,7 @@ class questionmodel
         return $questionlist;
     }
     //某个用户的文章总数
-    function rownumbycondition($condition){
+    function srownumbycondition($condition){
         //用户是顾问则只查询 authoritycontrol = 2
         if ($this->base->user['identity']==2){
             $condition .=" and authoritycontrol=2 ";

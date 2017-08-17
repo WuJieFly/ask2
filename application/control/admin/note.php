@@ -78,6 +78,15 @@ class admin_notecontrol extends base {
         }
         $this->ondefault($message);
     }
+    
+    function onmakeindex(){
+        ignore_user_abort();
+        set_time_limit(0);
+        $_ENV['note']->makeindex();
+        echo 'ok';
+        exit;
+    }
+    
 
 }
 

@@ -4,6 +4,14 @@
 <div class="row">
 <div class="aside">
 <ul class="menu">
+       <li class ="">
+        <a href="{url allsearch/default/$word}">
+            <div class="setting-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <span>全部</span>
+        </a>
+    </li>
      <li class="">
  <a href="{url topictag-$word}">
  <div class="setting-icon">
@@ -48,6 +56,12 @@
      </ul>
 
  </li>
+   <li class="">
+       <a href="{url note/search/$word}">
+           <div class="setting-icon"><i class="fa fa-file-word-o"></i></div>
+           <span>公告</span>
+       </a>
+   </li>
  </ul>
  </div> <div class="col-xs-16 col-xs-offset-8 main">
  <div class="search-content"><!----> <div class="result">检索到{$rownum} 个结果</div> 

@@ -135,7 +135,11 @@ class notecontrol extends base {
         $startindex = ($page - 1) * $pagesize;
         $seo_description=$word;
         $seo_keywords= $word;
-        $topiclist=null;//定义空文章数组
+        $notelist=null;//定义空文章数组
+        $notelist = $_ENV['note']->searchnote($word,$startindex,$pagesize);
+        $rownum = $_ENV['note'] ->searchrownum($word);
+        $departstr = page($rownum, $pagesize, $page, "note/search/$word");
+        include template('notesearch');
 
     }
     

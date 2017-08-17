@@ -1,0 +1,259 @@
+﻿<!--{template header}-->
+
+<link  rel="stylesheet" href="{SITE_URL}static/css/bianping/css/search.css"  media="all" />
+
+<div class="container search ">
+    <div class="row">
+        <div class="aside">
+            <ul class="menu">
+                <li class="active">
+                    <a href="{url allsearch/default/$word}">
+                        <div class="setting-icon">
+                            <i class="fa fa-bars "></i>
+                          
+                        </div>
+                        <span>
+                            全部
+                            <span class="badge">{$rownum} </span>
+                        </span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{url topictag-$word}">
+                        <div class="setting-icon">
+                            <i class="fa fa-rss-square"></i>
+                        </div>
+                        <span>
+                            文章
+                        </span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{url question/search/$word}">
+                        <div class="setting-icon">
+                            <i class="fa fa-question-circle-o"></i>
+                        </div>
+                        <span>
+                            问题
+                        </span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{url category/search/$word}">
+                        <div class="setting-icon">
+                            <i class=" fa fa-tag"></i>
+                        </div>
+                        <span>
+                            专题
+                        </span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{url note/search/$word}">
+                        <div class="setting-icon">
+                            <i class="fa fa-file-word-o"></i>
+                        </div>
+                        <span>
+                            公告
+                        </span>
+
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+
+        <div class="col-xs-16 col-xs-offset-8 main">
+            <div class ="search-content">
+                <div class="result">
+                    检索到{$rownum} 个结果
+                    <span>文章<span class="badge">{$topicnum}</span></span>
+                    <span>问题<span class="badge">{$questionnum}</span></span>
+                    <span>公告<span class="badge">{$notenum}</span></span>
+                    <span>专题<span class="badge">{$categorynum}</span></span>
+                </div>
+            
+                <!--{if $topiclist!=null||$questionlist!=null||$notelist!=null || $catlist!=null}-->
+                <ul class="note-list">
+
+                    <!--展示文章-->
+                <!--{if $topiclist!=null}-->
+                    <!--{loop $topiclist $topic}-->
+                    <li>
+                        <div class="content">
+                            <div class="author">
+                                <a href="{url user/space/$topic['authorid']}" target="_blank" class="avatar">
+                                    <img src=" {$topic['avatar']}">
+                                </a>
+                                <div class="name">
+                                    <a href="{url user/space/$topic['authorid']}">{$topic['author']}</a> <span class="time">{$topic['format_time']}
+                                    </span>
+                                </div>
+                            </div>
+                            <a href="{url topic/getone/$topic['id']}" target="_blank" class="title">
+                                <h3>{$topic['title']} <small>{$topic['srcs']}</small></h3>
+                            </a>
+                            <p class="abstract">
+                                {$topic['describtion']}
+                            </p>
+                            <div class="meta">
+                                <a href="{url topic/getone/$topic['id']}" target="_blank"><i class="fa fa-eye"></i>{$topic['views']}
+                                </a><a href="{url topic/getone/$topic['id']}#comments" target="_blank"><i class="fa fa-comment-o"></i>{$topic['articles']}
+                                </a><span><i class=" fa fa-heart-o"></i>{$topic['likes']}
+                                </span>
+                                <!---->
+                            </div>
+                        </div>
+                    </li>
+
+                    <!--{/loop}-->
+
+                <!--{/if}-->
+                    <!--展示问题-->
+                    <!--{if $questionlist!=null}-->
+                    <!--{loop $questionlist $question}-->
+                    <li>
+                        <div class="content">
+                            <div class="author">
+                                <a href="{url user/space/$question['authorid']}" target="_blank" class="avatar">
+                                    <img src=" {$question['avatar']}">
+                                </a>
+                                <div class="name">
+                                    <a href="{url user/space/$question['authorid']}">{$question['author']}</a> 
+                                    <span class="time">{$question['format_time']}</span>
+          
+                                </div>
+                            </div>
+                            <a href="{url question/view/$question['id']}" target="_blank" class="title">
+                                <h3>{$question['title']}<small>{$question['srcs']}</small> </h3>
+                            </a>
+                            <p class="abstract">
+                                {$question['description']}
+         
+                            </p>
+                            <div class="meta">
+                                <a href="{url question/view/$question['id']}" target="_blank"><i class="fa fa-eye"></i>{$question['views']}</a>
+                                <a href="{url question/view/$question['id']}#comments" target="_blank"><i class="fa fa-comment-o"></i>{$question['answers']} </a>
+                                <span><i class=" fa fa-heart-o"></i>{$question['attentions']}</span>
+                                <!---->
+                            </div>
+                        </div>
+                    </li>
+
+
+                    <!--{/loop}-->
+                  <!--{/if}-->
+
+                    <!--展示公告-->
+                    <!--{if $notelist !=null}-->
+                    <!--{loop $notelist $note}-->
+                    <li>
+                        <div class="content">
+
+                            <div class="author">
+                                <a href="{url user/space/$note['authorid']}" target="_blank" class="avatar">
+                                    <img src="{$note['authoravatar']}" />
+                                </a>
+                                <div class="name">
+                                    <a href="{url user/space/$note['authorid']}">{$note['author']}</a><span class="time">{$note['time']}</span>
+                                </div>
+                            </div>
+
+                            <a href="{url note/view/$note['id']}" target="_blank" class="title">
+                                <h3>{$note['title']}</h3>
+                            </a>
+                            <p class="abstract">
+                                {$note['content']}
+                            </p>
+                            <div class="meta">
+                                <a href="{url note/view/$note['id']}" target="_blank">
+                                    <i class="fa fa-eye"></i>
+                                    {$note['views']}
+                                </a>
+                                <a href="{url note/view/$note['id']#comments}" target="_blank">
+                                    <i class="fa fa-comment-o"></i>{$note['comments']}
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </li>
+
+                    <!--{/loop}-->
+
+                    <!--{/if}-->
+
+                    <!--展示专题-->
+
+                    <!--{if $catlist !=null}-->
+                    <!--category样式特殊因此加一层ul-->
+                    <li>
+                         <ul class="user-list">
+                              <!--{loop $catlist $cat}-->
+
+                             <li><a href="{url topic/catlist/$cat['id']}" target="_blank" class="avatar-collection">
+                                 <img src=" {$cat['image']}">
+                             </a>
+                                 <div class="info">
+                                     <a href="{url topic/catlist/$cat['id']}" target="_blank" class="name">
+                                         <h3>{$cat['name']} <small>{$cat['srcs']}</small></h3>
+                                     </a>
+                                     <div class="meta">
+                                         <span>收录了·{$cat['topics']}篇文章·{$cat['questions']}个问题 · {$cat['followers']}人关注
+                                         </span>
+                                     </div>
+                                 </div>
+                                 {if $cat['follow']}
+             <a class="btn btn-default following" id="attenttouser_{$cat['id']}" onclick="attentto_cat($cat['id'])"><i class="fa fa-check"></i><span>已关注</span></a>
+
+                                 {else}
+ <a class="btn btn-success follow" id="attenttouser_{$cat['id']}" onclick="attentto_cat($cat['id'])">
+     <i class="fa fa-plus"></i><span>关注</span>
+ </a>
+
+                                 {/if}  
+
+        
+                             </li>
+
+                    <!--{/loop}-->
+
+
+                          </ul>
+                    </li>
+                   
+                   
+                    <!--{/if}-->
+
+
+
+
+                
+                </ul>
+                <!--{else}-->
+                <div id="no-result">
+                    <p>抱歉，未找到和您搜索相关的内容。</p>
+                    <strong>建议您：</strong>
+                    <ul class="nav">
+                        <li><span>检查输入是否正确</span></li>
+                        <li><span>简化查询词或尝试其他相关词</span></li>
+                    </ul>
+                </div>
+
+                <!--{/if}-->
+                
+<div class="pages">  {$departstr}</div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    $(".note-list em").addClass("search-result-highlight");
+         </script>
+
+<!--{template footer}--> 
+

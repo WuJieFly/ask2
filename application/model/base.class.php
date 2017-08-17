@@ -415,6 +415,7 @@ WHERE  B.CUSTOMER_CODE = '$customercode' AND A.SOURCE_ID_RTK = 'DELIVERY_CUSTOME
         //daixy 置顶取消置顶
         $routing .= ',note/cancelindextop,note/addindextop,topic/addcategorytop,topic/cancelcategorytop,topic/addindextop,topic/cancelindextop,';
         $routing .= 'question/movecategory,new/asknosolve,new/nosolvequs,topic/movecategory,';
+        $routing.='note/search,allsearch/default,';
         $routing .=$this->user['regulars'];
           //  $pccaiji="";
         $regulars = explode(',', $routing);

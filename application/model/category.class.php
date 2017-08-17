@@ -252,9 +252,9 @@ class categorymodel {
         $condition = " ";
         ($cid!='all')&&$condition.=" AND pid =$cid ";
         if($this->base->user['identity'] == 3) {
-            $query = $this->db->query("SELECT * FROM `" . DB_TABLEPRE . "category` WHERE isFOSS=1 AND `name` like '%$name%'  $condition ORDER BY topics DESC LIMIT $limit");
+            $query = $this->db->query("SELECT * FROM `" . DB_TABLEPRE . "category` WHERE isFOSS=1 AND `name` like '%$name%'  $condition ORDER BY topics DESC LIMIT $start, $limit");
         }else{
-            $query = $this->db->query("SELECT * FROM `" . DB_TABLEPRE . "category` WHERE `name` like '%$name%'  $condition ORDER BY topics DESC LIMIT $limit");
+            $query = $this->db->query("SELECT * FROM `" . DB_TABLEPRE . "category` WHERE `name` like '%$name%'  $condition ORDER BY topics DESC LIMIT $start , $limit");
         }
         while ($category = $this->db->fetch_array($query)) {
         	  $category['follow'] = $this->is_followed($category['id'], $this->base->user['uid']);
@@ -408,6 +408,20 @@ class categorymodel {
         return $relval;
         
         
+    }
+    //返回某一篇内容的具体分类路径
+    function subcatorypath($cid =0){
+        
+        $quesrc=  $this->get_navigation($cid,true);
+        $quetemp =0;
+        $count = count($quesrc);
+        for ($i = 0; $i < $count; $i++)
+        {
+            $quetemp.=$quesrc[$i]['name'].'/';
+        }
+        $quetemp= substr($quetemp,1,strlen($quetemp)-1);
+        
+        return $quetemp;
     }
     
 

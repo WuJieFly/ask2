@@ -48,6 +48,7 @@
             <td width="45%" class="altbg1"><b>重建索引</b><br><span class="smalltxt">如果安装xunsearch前已有问答数据，请在xunsearch配置后重建索引</span></td>
             <td class="altbg2" id="indexmsg"><a href="javascript:makeindex();" id="makeindex" style="color:green;">点击此处开始建立问题索引</a></td>
              <td class="altbg2" id="topicindexmsg"><a href="javascript:maketopicindex();" id="maketopicindex" style="color:green;">点击此处开始建立文章索引</a></td>
+            <td class="altbg2" id="noteindexmsg"><a href="javascript:makenoteindex();" id="makenoteindex" style="color:green;">点击此处开始创建公告索引</a></td>
         </tr>
         <!--{/if}-->
     </table>
@@ -71,5 +72,15 @@
             } 
         });
     }
+
+    function makenoteindex() {
+        $("#makenoteindex").parent().html("<font color ='orange'>正在重新建立公告索引,请稍候...</font>");
+        $.get("{SITE_URL}index.php?admin_note/makeindex", function (msg) {
+            if (msg=='ok') {
+                $("#noteindexmsg").html("<font color='green'>已完成!</font>");
+            }
+        })
+    }
+
 </script>
 <!--{template footer,admin}-->

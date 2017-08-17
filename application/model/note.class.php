@@ -71,7 +71,50 @@ class notemodel {
         $username = $this->base->user['realname'];
         $uid = $this->base->user['uid'];
         $this->db->query('INSERT INTO ' . DB_TABLEPRE . "note(title,authorid,author,url,content,time) values ('$title','$uid','$username','$url','$content','{$this->base->time}')");
-        return $this->db->insert_id();
+        $nid=$this->db->insert_id();
+        if ($this->base->setting['xunsearch_open']&&$nid)
+        {
+            $note = $this->db->fetch_first("select * from ".DB_TABLEPRE."note where id = $nid");
+            $data = array();
+            $data['id'] = $note['id'];
+            $data['authorid'] =$note['authorid'];
+            $data['author'] = $note['author'];
+            $data['title'] = $note['title'];
+            $data['content'] =$note['content'];
+            $data['time'] = $note['time'];
+            $data['views'] = $note['views'];
+            $data['comments'] =$note['comments'];
+            $data['indextop'] =$note['indextop'];
+            $doc = new XSDocument;
+            $doc->setFields($data);
+            $this->xs->index->add($doc);
+
+        }
+        
+        
+        
+        return $nid;
+    }
+    //更新讯搜文章
+    function updateindex($nid){
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$note = $this->db->fetch_first("select * from ".DB_TABLEPRE."note where id = $nid");
+            $data = array();
+            $data['id'] = $note['id'];
+            $data['authorid'] =$note['authorid'];
+            $data['author'] = $note['author'];
+            $data['title'] = $note['title'];
+            $data['content'] =$note['content'];
+            $data['time'] = $note['time'];
+            $data['views'] = $note['views'];
+            $data['comments'] =$note['comments'];
+            $data['indextop'] =$note['indextop'];
+            $doc = new XSDocument;
+            $doc->setFields($data);
+            $this->xs->index->update($doc);
+        }
+        
     }
 
     function update_views($noteid) {
@@ -85,6 +128,8 @@ class notemodel {
     function update($id, $title, $url, $content) {
         $username = $this->base->user['username'];
         $this->db->query('update  ' . DB_TABLEPRE . "note  set title='$title',author='$username',url='$url',content='$content',time='{$this->base->time}' where id=$id ");
+        $this->updateindex($id);
+        
     }
 
     function remove_by_id($ids) {
@@ -99,16 +144,62 @@ class notemodel {
             foreach ($query as $note)
             {
                 $data = array();
-                $data['id'] = $note['id'];
-                $data['authorid'] = $note['authorid'];
-            	
+                $data['id'] = $note->id;
+                $data['authorid'] = $note->authorid;
+            	$data['author'] = $note->author;
+                $data['authoravatar'] = get_avatar_dir($note->authorid);
+                $data['avatar'] = get_avatar_dir($data['authorid']);
+                $data['title'] = $this->search->highlight($note->title);
+                
+                $data['content'] =$note->content;
+                $data['content'] =$this->search-> highlight(cutstr(checkwordsglobal(strip_tags($data['content'])), 240, '...'));
+                $data['time'] = tdate($note->time);
+                
+                $data['comments'] =$note->comments;
+                $data['views'] = $note->views;
+                $data['indextop'] =$note->indextop;
+                $notelist[]= $data;
             }
             
         	
+        }else
+        {
+        	$query=$this->db->query("select * from ".DB_TABLEPRE."note where title like '%$keyword%' or content like '%$keyword%'");
+            while ($note =$this->db->fetch_array($query))
+            {
+             
+                $note['title'] = $this->search->highlight($note['title']);
+                $note['content'] =   highlight(cutstr(checkwordsglobal(strip_tags($note['content'])), 240, '...'), $note['title']);
+            	
+                $note['time'] = tdate($note['time']);
+                $note['authoravatar'] = get_avatar_dir($note['authorid']);
+                $note['avatar'] = get_avatar_dir($note['authorid']);
+                $notelist[] =$note;
+            }
+            
+            
         }
+        return $notelist;
         
     
     }
+    
+    function searchrownum($keyword){
+        $rownum =0;
+        if ($this->base->setting['xunsearch_open'])
+        {
+            $rownum = $this->search->getLastCount();
+        	
+        }else
+        {
+        	$rownum = $this->db->result_frist("select count(*) from ".DB_TABLEPRE."note where title like '%$keyword%'or content like '%$keyword%'");
+        }
+        return $rownum;
+        
+        
+    
+    }
+    
     //更新索引
     function makeindex(){
     
