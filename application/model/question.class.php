@@ -747,6 +747,7 @@ class questionmodel
             $question['answers'] = 0;
             $question['price'] = $price;
             $question['attentions'] = 1;
+            $question['views'] = 0;
             $question['shangjin'] = $shangjin;
             $question['status'] = $status;
             $question['time'] = $creattime;
@@ -1017,6 +1018,7 @@ class questionmodel
             $data['answers'] = $question['answers'];
             $data['price'] = $question['price'];
             $data['attentions'] = $question['attentions'];
+            $data['views'] = $question['views'];
             $data['shangjin'] = $question['shangjin'];
             $data['status'] = $question['status'];
             $data['time'] = $question['time'];
@@ -1192,6 +1194,8 @@ tmp.qid
                     $question['authorid'] = $doc->authorid;
                     $question['authoravatar'] = get_avatar_dir($doc->authorid);
                     $question['answers'] = $doc->answers;
+                    $question['views'] = $doc->views;
+                    $question['attentions'] = $doc->attentions;
                     $question['status'] = $doc->status;
                     $question['format_time'] = tdate($doc->time);
                     $question['title'] = $this->search->highlight($doc->title);

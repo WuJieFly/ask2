@@ -172,11 +172,10 @@ class topicmodel
                     $topic['image'] = $topic->image;
 
                     $topic['title'] = $this->search->highlight($doc->title);
-                    $topic['describtion'] = $this->search->highlight($doc->describtion);
+                    $topic['describtion'] = $doc->describtion;
                     $topic['category_name'] =$cainfo['name'];
                     //$topic['category_name'] = $this->base->category[$topic['articleclassid']]['name'];
-                    $topic['describtion'] = highlight(cutstr(checkwordsglobal(strip_tags($topic['describtion'])), 240, '...'), $word);
-
+                    $topic['describtion'] = $this->search->highlight(cutstr(checkwordsglobal(strip_tags($topic['describtion'])), 240, '...'));
                     $topic['avatar'] = get_avatar_dir($topic['authorid']);
                     $topic['views'] = $doc->views;
                     $topic['articles'] = $doc->articles;

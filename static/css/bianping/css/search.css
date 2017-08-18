@@ -490,6 +490,13 @@
 	font-size:13px;
 	color:#b4b4b4
 }
+/*搜索栏位的加蓝色*/
+
+.search .main .result span strong{
+    color:blue;
+   
+}
+
 .search .main .user-list {
 	margin:0;
 	padding-top:30px;

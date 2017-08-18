@@ -27,6 +27,7 @@ class notexsclass
 
     
     function makeindex(){
+        $this->index->clean();
         $query = $this->db->query("select * from ".DB_TABLEPRE."note ");
         while ($note =$this->db->fetch_array($query))
         {

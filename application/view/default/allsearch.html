@@ -67,11 +67,11 @@
         <div class="col-xs-16 col-xs-offset-8 main">
             <div class ="search-content">
                 <div class="result">
-                    检索到{$rownum} 个结果
-                    <span>文章<span class="badge">{$topicnum}</span></span>
-                    <span>问题<span class="badge">{$questionnum}</span></span>
-                    <span>公告<span class="badge">{$notenum}</span></span>
-                    <span>专题<span class="badge">{$categorynum}</span></span>
+                    检索到<span class="label">{$rownum}</span>个结果
+                    <span><strong>文章</strong>    <span class="label">{$topicnum}</span></span>
+                    <span><strong>问题</strong>    <span class="label">{$questionnum}</span></span>
+                    <span><strong>公告</strong>    <span class="label">{$notenum}</span></span>
+                    <span><strong>专题</strong>    <span class="label">{$categorynum}</span></span>
                 </div>
             
                 <!--{if $topiclist!=null||$questionlist!=null||$notelist!=null || $catlist!=null}-->
@@ -98,9 +98,9 @@
                                 {$topic['describtion']}
                             </p>
                             <div class="meta">
-                                <a href="{url topic/getone/$topic['id']}" target="_blank"><i class="fa fa-eye"></i>{$topic['views']}
-                                </a><a href="{url topic/getone/$topic['id']}#comments" target="_blank"><i class="fa fa-comment-o"></i>{$topic['articles']}
-                                </a><span><i class=" fa fa-heart-o"></i>{$topic['likes']}
+                                <a href="{url topic/getone/$topic['id']}" target="_blank"><i class="fa fa-eye"></i> {$topic['views']}
+                                </a><a href="{url topic/getone/$topic['id']}#comments" target="_blank"><i class="fa fa-comment-o"></i> {$topic['articles']}
+                                </a><span><i class=" fa fa-heart-o"></i> {$topic['likes']}
                                 </span>
                                 <!---->
                             </div>
@@ -133,9 +133,9 @@
          
                             </p>
                             <div class="meta">
-                                <a href="{url question/view/$question['id']}" target="_blank"><i class="fa fa-eye"></i>{$question['views']}</a>
-                                <a href="{url question/view/$question['id']}#comments" target="_blank"><i class="fa fa-comment-o"></i>{$question['answers']} </a>
-                                <span><i class=" fa fa-heart-o"></i>{$question['attentions']}</span>
+                                <a href="{url question/view/$question['id']}" target="_blank"><i class="fa fa-eye"></i> {$question['views']}</a>
+                                <a href="{url question/view/$question['id']}#comments" target="_blank"><i class="fa fa-comment-o"></i> {$question['answers']} </a>
+                                <span><i class=" fa fa-heart-o"></i> {$question['attentions']}</span>
                                 <!---->
                             </div>
                         </div>
@@ -169,10 +169,10 @@
                             <div class="meta">
                                 <a href="{url note/view/$note['id']}" target="_blank">
                                     <i class="fa fa-eye"></i>
-                                    {$note['views']}
+                                      {$note['views']}
                                 </a>
                                 <a href="{url note/view/$note['id']#comments}" target="_blank">
-                                    <i class="fa fa-comment-o"></i>{$note['comments']}
+                                    <i class="fa fa-comment-o"></i> {$note['comments']}
                                 </a>
 
                             </div>
