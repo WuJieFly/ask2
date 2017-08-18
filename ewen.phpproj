@@ -5834,7 +5834,11 @@
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_14.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_15.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_16.png" />
+    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_17.png" />
+    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_2.jpg" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_2.png" />
+    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_22.png" />
+    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_23.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_3.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_4.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_5.png" />
