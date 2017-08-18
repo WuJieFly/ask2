@@ -68,10 +68,10 @@
             <div class ="search-content">
                 <div class="result">
                     检索到<span class="label">{$rownum}</span>个结果
-                    <span><strong>文章</strong>    <span class="label">{$topicnum}</span></span>
-                    <span><strong>问题</strong>    <span class="label">{$questionnum}</span></span>
-                    <span><strong>公告</strong>    <span class="label">{$notenum}</span></span>
-                    <span><strong>专题</strong>    <span class="label">{$categorynum}</span></span>
+                     <span> <a href="{url topictag-$word}"><strong>文章</strong> </a>   <span class="label">{$topicnum}</span></span>
+                   <span> <a href="{url question/search/$word}"><strong>问题</strong> </a>   <span class="label">{$questionnum}</span></span>
+                   <span> <a href="{url note/search/$word}"> <strong>公告</strong>  </a>  <span class="label">{$notenum}</span></span>
+                  <span>  <a href="{url category/search/$word }"> <strong>专题</strong> </a>   <span class="label">{$categorynum}</span></span> 
                 </div>
             
                 <!--{if $topiclist!=null||$questionlist!=null||$notelist!=null || $catlist!=null}-->

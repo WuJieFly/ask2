@@ -66,7 +66,7 @@ class sowenda {
       
        if($this->get[0]!='admin_template'){
         //checkattack($this->post, 'post');
-        checkattack($this->get, 'get');
+       // checkattack($this->get, 'get');
          unset($_POST);
        }
        
