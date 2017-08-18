@@ -5827,8 +5827,6 @@
     <Content Include="static\js\jquery.cookie.js" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_0.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_1.png" />
-    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_10.png" />
-    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_11.jpg" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_12.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_13.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_14.png" />
@@ -5836,7 +5834,6 @@
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_16.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_17.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_2.jpg" />
-    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_2.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_22.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_23.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_3.png" />
@@ -5845,7 +5842,6 @@
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_6.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_7.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_8.png" />
-    <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_9.png" />
     <Content Include="static\js\wangeditor\face\1.gif" />
     <Content Include="static\js\wangeditor\face\10.gif" />
     <Content Include="static\js\wangeditor\face\11.gif" />
