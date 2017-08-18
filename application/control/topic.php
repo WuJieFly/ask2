@@ -595,7 +595,8 @@ foreach ($topiclist as $key=>$val){
            $topicone['tags']=$taglist;
     	$topicone['views']=$topicone['views']+1;
         //这个地方也要更新
-    	 $_ENV['topic']->updatetopic($topicone['id'], $topicone['title'], $topicone['describtion'],$topicone['image'],$topicone['isphone'],$topicone['views'],$topicone['articleclassid'],$topicone['ispc'],$topicone['authoritycontrol'],$topicone['cid1'],$topicone['cid2'],$topicone['cid3']);
+         
+    	 $_ENV['topic']->updatetopic($topicone['id'], $topicone['title'], addslashes($topicone['describtion']),$topicone['image'],$topicone['isphone'],$topicone['views'],$topicone['articleclassid'],$topicone['ispc'],$topicone['authoritycontrol'],$topicone['cid1'],$topicone['cid2'],$topicone['cid3']);
     	 $navtitle = $topicone['title'];
     	    $this->load("favorite");
    	    $followerlist=$_ENV['favorite']->get_list_bytid($topicid);//收藏的人
