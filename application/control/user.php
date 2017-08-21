@@ -1155,7 +1155,7 @@ class usercontrol extends base
         $pagesize = $this->setting['list_default'];
         $startindex = ($page - 1) * $pagesize; //每页面显示$pagesize条
         $questionlist = $_ENV['question']->list_by_uid($this->user['uid'], $status, $startindex, $pagesize);
-        $questiontotal = $_ENV['question']->rownumbycondition('authorid=' . $this->user['uid']);
+        $questiontotal = $this->db->fetch_total('question','authorid=' . $this->user['uid']); //这边提问的数据就是有多少就返回多少？我感觉不应该在加上条件判断
         //$questiontotal = intval($this->db->fetch_total('question', 'authorid=' . $this->user['uid'] . $_ENV['question']->statustable[$status]));
         $departstr = page($questiontotal, $pagesize, $page, "user/ask/$status"); //得到分页字符串
         include template('myask');
