@@ -199,6 +199,12 @@
 	color:#969696;
 	vertical-align:middle
 }
+/*语言选择栏位*/
+.sign .language-select{
+    float:right;
+    margin:10px 0;
+}
+
 .sign .forget-btn {
 	float:right;
 	position:relative;

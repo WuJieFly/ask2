@@ -5825,6 +5825,7 @@
     <Content Include="static\css\images\zhiding.png" />
     <Content Include="static\js\autocomplete\jquery.autocomplete.js" />
     <Content Include="static\js\jquery.cookie.js" />
+    <Content Include="static\js\jquery.s2t.js" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_0.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_1.png" />
     <Content Include="static\js\neweditor\dialogs\attachment\fileTypeImages\coverimage_12.png" />
