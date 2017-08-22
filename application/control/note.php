@@ -63,9 +63,12 @@ class notecontrol extends base {
         	if($this->user['isblack']==1){
         $this->message('黑名单用户无法评论！', 'BACK');
         	}
+            //公共评论 做繁体转到简体
+            $comment = $this->post['content'];
+            $comment = convertttos($comment);
         				
             $noteid = intval($this->post['noteid']);
-            $_ENV['note_comment']->add($noteid, $this->post['content']);
+            $_ENV['note_comment']->add($noteid, $comment);
             $_ENV['note']->update_comments($noteid);
             //通知公告作者
             $note = $_ENV['note']->get($noteid);
@@ -135,9 +138,10 @@ class notecontrol extends base {
         $startindex = ($page - 1) * $pagesize;
         $seo_description=$word;
         $seo_keywords= $word;
+        $relword = convertttos($word);
         $notelist=null;//定义空文章数组
-        $notelist = $_ENV['note']->searchnote($word,$startindex,$pagesize);
-        $rownum = $_ENV['note'] ->searchrownum($word);
+        $notelist = $_ENV['note']->searchnote($relword,$startindex,$pagesize);
+        $rownum = $_ENV['note'] ->searchrownum($relword);
         $departstr = page($rownum, $pagesize, $page, "note/search/$word");
         include template('notesearch');
 

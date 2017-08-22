@@ -198,6 +198,7 @@ class usercontrol extends base
 
             $title = $this->post['title'];
             $topic_tag = $this->post['topic_tag'];
+            $topic_tag = convertttos($topic_tag); //对tag做个转换
             $ataglist = explode(",", $topic_tag);
             $desrc = $this->post['desc'];
             $outimgurl = $this->post['imgurl'];
@@ -268,7 +269,9 @@ class usercontrol extends base
 //                $this->message('封面图和外部图片至少填写一个!', 'user/addxinzhi');
 //                exit;
 //            }
-
+         //为了支持多语言，对输入的内容做翻译处理
+          $title= convertttos($title);
+          $desrc = convertttos($desrc);
             $aid = $_ENV['topic']->addtopic($title, $desrc, $filepath, $this->user['realname'], $this->user['uid'], 1, $acid,$authoritycontrol,$cid1,$cid2,$cid3);
 //$tag=implode(',',$tagarr);
             // $taglist = explode(",", $tag);
@@ -404,6 +407,11 @@ class usercontrol extends base
                 $this->message('请完整填写专题相关参数!', 'errormsg');
                 exit;
             }
+            //对修改过的文章做繁体翻译
+            $title= convertttos($title);
+            
+            $desrc = convertttos($desrc);
+            
             $pictype = $this->post['fengmian'];
             //如果是1代表系统帮我自动默认，1通过$outimgurl获取，2代表由我自行选择，通过$_FILES['image']
             $imgname = strtolower($_FILES['image']['name']);

@@ -18,3 +18,27 @@ function stristraditioncal($str)
 {
 	return iconv('UTF-8','GB2312',$str)===false?true:false;
 }
+
+
+/*转换繁体到简体*/
+
+function convertttos($str){
+    if (stristraditioncal($str))
+    {
+    	$str = convertlange($str,'zh-cn');
+    }
+    
+    return $str;
+}
+
+
+/*转换简体到繁体*/
+
+function convertstot($str){
+    if (!stristraditioncal($str))
+    {
+    	$str=convertlange($str);
+    }
+    return $str;
+    
+}

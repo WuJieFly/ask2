@@ -108,6 +108,8 @@ class questioncontrol extends base
         $title = $this->post['title'];
         $chakanjine = doubleval($this->post['chakanjine']);
         $content = $this->post['content'];
+        $title = convertttos($title); //提交回答内容易做繁体>简体翻译
+        $content =convertttos($content);
         //检查审核和内容外部URL过滤
         $status = intval(2 != (2 & $this->setting['verify_question']));
         $allow = $this->setting['allow_outer'];
@@ -369,6 +371,7 @@ class questioncontrol extends base
             exit();
 
         }
+        $title =convertttos($title);
         $q = $_ENV['question']->get_by_title(htmlspecialchars($title));
         if ($q != null) {
             $viewurl = urlmap('question/view/' . $q['id'], 2);
@@ -491,6 +494,7 @@ class questioncontrol extends base
         if ($this->user['groupid'] == 1) {
             $status = 1;
         }
+        $description = convertttos($description);
         $qid = $_ENV['question']->add($title, $description, $hidanswer, $price, $cid, $cid1, $cid2, $cid3, $status, $shangjin, $askfromuid, $authoritycontrol);
 
 
@@ -1341,6 +1345,7 @@ class questioncontrol extends base
                 }
             }*/
             $content = $this->post['content'];
+            $content = convertttos($content);
             $viewurl = urlmap('question/view/' . $question['id'], 2);
 
             //检查审核和内容外部URL过滤
@@ -1662,7 +1667,7 @@ class questioncontrol extends base
             $category=$_ENV['category']->get($cid);
         }
         
-        
+        $relword= convertttos($word);
         @$page = max(1, intval($this->get[5]));
         $pagesize = $this->setting['list_default'];
         $startindex = ($page - 1) * $pagesize;
@@ -1671,15 +1676,15 @@ class questioncontrol extends base
             $rownum = $_ENV['question']->rownum_by_tag($tag, $qstatus);
             $questionlist1 = $_ENV['question']->list_by_tag($tag, $qstatus, $startindex, $pagesize);
         } else {
-            $questionlist1 = $_ENV['question']->search_title($word, $qstatus, 0, $startindex, $pagesize,$cfield,$cid);
-            $rownum = $_ENV['question']->search_title_num($word, $qstatus,$cfield,$cid);
+            $questionlist1 = $_ENV['question']->search_title($relword, $qstatus, 0, $startindex, $pagesize,$cfield,$cid);
+            $rownum = $_ENV['question']->search_title_num($relword, $qstatus,$cfield,$cid);
         }
         
         $sublist = $_ENV['category']->query_list_by_cid_pid($cid); //获取子分类 
         
         foreach ($sublist as $key => $val)
         {
-            $relrownum= $_ENV['question']->search_title_num_sub($word,$qstatus,'cid'.$val['grade'],$val['id']);
+            $relrownum= $_ENV['question']->search_title_num_sub($relword,$qstatus,'cid'.$val['grade'],$val['id']);
             $sublist[$key]['topics']=$relrownum;
         }
         
@@ -1899,7 +1904,10 @@ class questioncontrol extends base
             if (isset($this->post['authoritycontrol'])) {
                 $authoritycontrol = $this->post['authoritycontrol'];
             }
-            $_ENV['question']->update_content($qid, $title, $this->post['content'],$authoritycontrol);
+            $content = $this->post['content'];//修改回答后对内容要做简繁转换的
+            $content= convertttos($content);
+            $title = convertttos($title);
+            $_ENV['question']->update_content($qid, $title, $content,$authoritycontrol);
             $qurl=' <a href="' .$viewurl . '">点击查看问题</a>'; //站内url都使用这个
             //编辑问题通知作者 
             $msginfo =$_ENV['email_msg']->question_edit($question['author'],$question['title'],$this->user['realname'], tdate(time()),$qurl);

@@ -68,10 +68,11 @@ var $whitelist;
             $category=$_ENV['category']->get($cid);
         }
         
-
-            $topiclist = $_ENV['topic']->get_bylikename($word, $startindex, $pagesize,$cfield,$cid);
+        $relword = convertttos($word);
+        
+        $topiclist = $_ENV['topic']->get_bylikename($relword, $startindex, $pagesize,$cfield,$cid);
           
-            $rownum=$_ENV['topic']->rownum_by_title($word,$cfield,$cid);
+        $rownum=$_ENV['topic']->rownum_by_title($relword,$cfield,$cid);
             
        
 
@@ -81,7 +82,7 @@ var $whitelist;
             
             foreach ($sublist as $key => $val)
             {
-            	$relrownum= $_ENV['topic']->rownum_by_title_sub($word,'cid'.$val['grade'],$val['id']);
+            	$relrownum= $_ENV['topic']->rownum_by_title_sub($relword,'cid'.$val['grade'],$val['id']);
                 $sublist[$key]['topics']=$relrownum;
             }
           
@@ -188,6 +189,9 @@ foreach ($topiclist as $key=>$val){
   		echo json_encode($message);
   		exit();
   	}
+      //添加文章评论繁体转换成简体
+      $title= convertttos($title);
+      $content = convertttos($content);
     	$status=1;
     	$supports=rand(1, 5);
     	$id=$_ENV['articlecomment']->add_seo($tid,$title,$content,$this->user['uid'],$this->user['realname'],$status,$supports);

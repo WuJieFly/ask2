@@ -53,11 +53,13 @@ class allsearchcontrol extends base
         $startindex = ($page - 1) * $pagesize;
         $seo_description=$word;
         $seo_keywords= $word;
+       //繁体搜索关键字要转换成简体
+        $relword = convertttos($word);
         
        
         //文章
-        $topiclist = $_ENV['topic']->get_bylikename($word,$startindex,$pagesize,''); //查询所有的 cfiled=''
-        $topicnum = $_ENV['topic']->rownum_by_title($word,'');
+        $topiclist = $_ENV['topic']->get_bylikename($relword,$startindex,$pagesize,''); //查询所有的 cfiled=''
+        $topicnum = $_ENV['topic']->rownum_by_title($relword,'');
         foreach ($topiclist as $key=>$value)
         {
             $topiclist[$key]['srcs']=$_ENV['category']->subcatorypath($value['articleclassid']);
@@ -66,8 +68,8 @@ class allsearchcontrol extends base
         
         
        //问题 
-        $questionlist = $_ENV['question']->search_title($word,'',0,$startindex,$pagesize,'',0);
-        $questionnum = $_ENV['question']->search_title_num($word,'','cid1',0);
+        $questionlist = $_ENV['question']->search_title($relword,'',0,$startindex,$pagesize,'',0);
+        $questionnum = $_ENV['question']->search_title_num($relword,'','cid1',0);
         foreach ($questionlist as $key=>$value)
         {
         	$questionlist[$key]['srcs'] =$_ENV['category']->subcatorypath($value['cid']);
@@ -76,14 +78,14 @@ class allsearchcontrol extends base
         
         //公告
         
-        $notelist = $_ENV['note']->searchnote($word,$startindex,$pagesize);
-        $notenum = $_ENV['note']->searchrownum($word);
+        $notelist = $_ENV['note']->searchnote($relword,$startindex,$pagesize);
+        $notenum = $_ENV['note']->searchrownum($relword);
         
         //专题
         
-        $categorynum = $_ENV['category']->rownumbycondition(" `name` like '%$word%'  ");
+        $categorynum = $_ENV['category']->rownumbycondition(" `name` like '%$relword%'  ");
         
-        $catlist = $_ENV['category']->list_by_name($word, $startindex, $pagesize,'all');
+        $catlist = $_ENV['category']->list_by_name($relword, $startindex, $pagesize,'all');
         foreach ($catlist as $key=>$value)
         {
             
@@ -91,7 +93,8 @@ class allsearchcontrol extends base
         }
         
         
-       
+       //搜索完成后把关键字转换回去
+  
         $maxcats = array(  @ceil($topicnum/$pagesize)=>$topicnum.','.$pagesize,@ceil($questionnum/$pagesize)=>$questionnum.','.$pagesize
             , @ceil($notenum/$pagesize)=>$notenum.','.$pagesize, @ceil($categorynum/$pagesize)=>$categorynum.','.$pagesize);
         $max = array_search(max($maxcats),$maxcats);
