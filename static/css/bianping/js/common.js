@@ -257,11 +257,40 @@ function usercard_out() {
 }
 
 
+//过滤掉字符串中特殊字符
+function jsreplacestr(str) {
+    var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]")
+    var rs = "";
+    for (var i = 0; i < str.length; i++) {
+        rs = rs + str.substr(i, 1).replace(pattern, '');
+    }
+    return rs;
+}
+//验证是否存在特殊字符
+function jsregstr(str) {
+    var tmp = /\.|&|\//;
+    if (tmp.test(str)) {
+        return true;
+    }
+    return false;
 
+}
 
+function changekeyword() {
+    var word = $("#search-kw").val();
+    word = jsreplacestr(word);
+    $("#search-kw").val(word);
+}
 
-
-
+function checkkeyword() {
+    var word = $("#search-kw").val();
+    if (jsregstr(word)) {
+        $("#search-kw").val('');
+        alert("搜索关键字包含特殊字符. & /");
+        return false;
+    }
+    return true;
+}
 
 
 
