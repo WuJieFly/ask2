@@ -15,12 +15,13 @@
 
         <!--{if 0!=$user['uid']}-->
         <!-- 登录显示写文章 -->
+             <a  style="visibility:hidden" class="btn write-btn" target="_blank" href="{url user/addxinzhi}">
+            <i class="fa fa-pencil"></i>写文章
+        </a>
         <a class="btn write-btn" target="_blank" href="{url question/add}">
             <i class="fa fa-magic"></i>来提问
         </a>
-        <a class="btn write-btn" target="_blank" href="{url user/addxinzhi}">
-            <i class="fa fa-pencil"></i>写文章
-        </a>
+ 
         <!-- 如果用户登录，显示下拉菜单 -->
         <div class="user">
             <div data-hover="dropdown">
@@ -109,12 +110,13 @@
         </div>
         <!--{else}-->
         <!-- 未登录显示登录/注册/写文章/提问题 -->
+          <a style="visibility:hidden" class="btn write-btn" target="_blank" href="{url user/addxinzhi}">
+            <i class="fa fa-pencil"></i>写文章
+        </a>
         <a class="btn write-btn" target="_blank" href="{url question/add}">
             <i class="fa fa-magic"></i>来提问
         </a>
-        <a class="btn write-btn" target="_blank" href="{url user/addxinzhi}">
-            <i class="fa fa-pencil"></i>写文章
-        <!--</a> <a class="btn sign-up" href="{url user/register}">注册</a>-->
+      <a class="btn sign-up" href="{url user/register}">注册</a>
         <a class="btn log-in" href="{url user/login}">登录</a>
 
         <!--{/if}-->
