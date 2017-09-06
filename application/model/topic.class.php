@@ -61,6 +61,46 @@ class topicmodel
         return $topic;
     }
 
+    //获取搜索的热词
+    function get_hotquery($limit=6 ,$type='total'){
+        $hotkey= array();
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$hotkey= $this->search->getHotQuery($limit,$type);
+        }
+        return $hotkey;
+    }
+    // 获取相关搜索 
+    function get_relatedquery($key,$limit=6){
+        $relates = array();
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$relates = $this->search->getRelatedQuery($key,$limit);
+        }
+        return $relates;
+        
+    }
+    
+    
+    
+    
+    //获取纠错热词
+    //在搜索的数据很少的时候调用
+    // 比如搜索没有结果的时候
+    function get_correctedquery($key){
+        $corrects = array();
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$corrects =$this->search->getCorrectedQuery($key);
+        }
+        return $corrects;
+        
+    }
+    
+    
+    
+    
+    
     
     
     

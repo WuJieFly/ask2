@@ -62,9 +62,7 @@ class allsearchcontrol extends base
         {
             $topiclist[$key]['srcs']=$_ENV['category']->subcatorypath($value['articleclassid']);
         }
-        
-        
-        
+        $hotwords = $_ENV['topic']->get_hotquery(3,'currnum');
        //问题 
         $questionlist = $_ENV['question']->search_title($word,'',0,$startindex,$pagesize,'',0);
         $questionnum = $_ENV['question']->search_title_num($word,'','cid1',0);
@@ -72,13 +70,14 @@ class allsearchcontrol extends base
         {
         	$questionlist[$key]['srcs'] =$_ENV['category']->subcatorypath($value['cid']);
         }
-        
-        
+        $qhotwords = $_ENV['question']->get_hotquery(3,'currnum');
+        $hotwords = array_merge($hotwords,$qhotwords);
+
         //公告
         
         $notelist = $_ENV['note']->searchnote($word,$startindex,$pagesize);
         $notenum = $_ENV['note']->searchrownum($word);
-        
+
         //专题
         
         $categorynum = $_ENV['category']->rownumbycondition(" `name` like '%$word%'  ");
@@ -90,7 +89,13 @@ class allsearchcontrol extends base
         	$catlist[$key]['srcs']=$_ENV['category']->subcatorypath($value['id']);
         }
         
-        
+        $relateds  = $_ENV['topic']->get_relatedquery($word,5);
+      
+        $qrelateds = $_ENV['question']->get_relatedquery($word,5);
+        $nrelateds = $_ENV['note']->get_relatedquery($word,5);
+      
+        $relateds = array_unique(array_merge($relateds,$qrelateds,$nrelateds));
+       
        
         $maxcats = array(  @ceil($topicnum/$pagesize)=>$topicnum.','.$pagesize,@ceil($questionnum/$pagesize)=>$questionnum.','.$pagesize
             , @ceil($notenum/$pagesize)=>$notenum.','.$pagesize, @ceil($categorynum/$pagesize)=>$categorynum.','.$pagesize);
@@ -103,7 +108,13 @@ class allsearchcontrol extends base
         //var_dump($maxcats[$max][0]);
         //var_dump($maxcats[$max][1]);
         $rownum = $topicnum+$questionnum+$notenum+$categorynum;
-
+        if ($rownum==0) //查询建议搜索
+        {
+        	$corrects = $_ENV['topic']->get_correctedquery($word);
+            $qcorrects = $_ENV['question']->get_correctedquery($word);
+            $corrects = array_merge($corrects,$qcorrects);
+        }
+        
         $departstr = page(explode(',',$maxcats[$max])[0],explode(',', $maxcats[$max])[1], $page, "allsearch/default/$word"); //每页20条 暂时安装最大分页数来分页吧
         //后面再考虑是否可以按照一页多少条来处理分页
 

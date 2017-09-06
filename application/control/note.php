@@ -138,6 +138,18 @@ class notecontrol extends base {
         $notelist=null;//定义空文章数组
         $notelist = $_ENV['note']->searchnote($word,$startindex,$pagesize);
         $rownum = $_ENV['note'] ->searchrownum($word);
+        
+        $hotwords = $_ENV['note']->get_hotquery(6,'currnum');
+        
+        $relateds  = $_ENV['note']->get_relatedquery($word,5);
+        
+        if ($rownum==0)
+        {
+            $corrects = $_ENV['note']->get_correctedquery($word);
+        }
+        
+        
+        
         $departstr = page($rownum, $pagesize, $page, "note/search/$word");
         include template('notesearch');
 
