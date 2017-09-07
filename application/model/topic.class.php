@@ -97,8 +97,16 @@ class topicmodel
         
     }
     
-    
-    
+    //搜索建议
+    function get_expandedquery($key ,$limit =10){
+        $expands = array();
+        if ($this->base->setting['xunsearch_open'])
+        {
+        	$expands = $this->search->getExpandedQuery($key,$limit);
+        }
+        return $expands;
+        
+    }
     
     
     

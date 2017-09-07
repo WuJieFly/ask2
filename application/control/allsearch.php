@@ -126,5 +126,36 @@ class allsearchcontrol extends base
     }
     
     
+    function onajaxexpandedquery(){
+        $word = $this->post['query'];
+        $word = str_replace(array("\\","'"," ","/","&"),"", $word);
+        $word = strip_tags($word);
+        $word = htmlspecialchars($word);
+        $word = taddslashes($word, 1);
+        
+        $topicexps = $_ENV['topic']->get_expandedquery($word,6);
+        
+        $questionexps = $_ENV['question']->get_expandedquery($word,6);
+        $noteexps = $_ENV['note']->get_expandedquery($word,6);
+        
+        
+        $lists = array_unique(array_merge($topicexps,$questionexps,$noteexps));
+        
+        
+        $result = array();
+        $suggestions = array();
+        $data = array();
+        foreach ($lists as $key=>$val){
+            $suggestions[] = $val;
+            $data[] =$val;
+        }
+        $result['query'] = $word;
+        $result['suggestions'] = $suggestions;
+        $result['data'] = $data;
+        echo urldecode(json_encode($result));
+        
+        
+    }
+    
     
 }
