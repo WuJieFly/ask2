@@ -303,7 +303,7 @@ class usercontrol extends base
             if($userinfo['identity']==3){
                 $categoryjs = $_ENV['category']->get_jsforcustomer();
             }else {
-                $categoryjs = $_ENV['category']->get_js();
+                $categoryjs = $_ENV['category']->get_jsforall();//普通用户获取所有的节点
             }
             $unknownpic = SITE_URL.'/static/js/neweditor/dialogs/attachment/images/image.png';
             $index=strpos($userinfo['defaultcoverimage'],'http');

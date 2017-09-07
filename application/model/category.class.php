@@ -340,11 +340,9 @@ class categorymodel {
         (!$cid) && $cid = $cid;
         $categoryjs = array();
         $category1 = $category2 = $category3 = '';
-        if($this->base->user['identity'] == 3) {
-            $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid and `isFOSS`=1 order by displayorder asc ");
-        }else{
-            $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid  and `isFOSS`=0  order by displayorder asc ");
-        }
+        //去掉这边的判断，如果有需要判断根据需要在使用的时候控制
+        $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid  and `isFOSS`=0  order by displayorder asc "); 
+
 
         while ($category = $this->db->fetch_array($query)) {
             switch ($category['grade']) {
@@ -387,6 +385,41 @@ class categorymodel {
         $categoryjs['category3'] = "[" . substr($category3, 0, -1) . "]";
         return $categoryjs;
     }
+    //获取所有的节点，
+    function get_jsforall($cid=0){
+        (!$cid) && $cid = $cid;
+        $categoryjs = array();
+        $category1 = $category2 = $category3 = '';
+     
+        $query = $this->db->query("SELECT *  FROM " . DB_TABLEPRE . "category WHERE `id` != $cid  order by displayorder asc "); 
+
+
+        while ($category = $this->db->fetch_array($query)) {
+            switch ($category['grade']) {
+                case 1:
+                    $category1.='["' . $category['id'] . '","' . $category['name'] . '"],';
+                    break;
+                case 2:
+                    $category2.='["' . $category['pid'] . '","' . $category['id'] . '","' . $category['name'] . '"],';
+                    break;
+                case 3:
+                    $category3.='["' . $category['pid'] . '","' . $category['id'] . '","' . $category['name'] . '"],';
+                    break;
+            }
+        }
+        $categoryjs['category1'] = "[" . substr($category1, 0, -1) . "]";
+        $categoryjs['category2'] = "[" . substr($category2, 0, -1) . "]";
+        $categoryjs['category3'] = "[" . substr($category3, 0, -1) . "]";
+        return $categoryjs;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     /*   专题页面显示特定分类  */
     
     function get_topnav($cid ,$grade=1){
