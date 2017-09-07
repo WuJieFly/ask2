@@ -475,7 +475,7 @@ class usercontrol extends base
             if($userinfo['identity']==3){
                 $categoryjs = $_ENV['category']->get_jsforcustomer();
             }else {
-                $categoryjs = $_ENV['category']->get_js();
+                $categoryjs = $_ENV['category']->get_jsforall();
             }
             //$categoryjs = $_ENV['category']->get_js();
             $unknownpic = SITE_URL.'/static/js/neweditor/dialogs/attachment/images/image.png';
