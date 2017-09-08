@@ -485,18 +485,24 @@
 }
 .search .main .result {
 	position:absolute;
-	top:25px;
+	top:10px;
 	right:15px;
 	font-size:13px;
 	color:#b4b4b4
 }
 /*搜索栏位的加蓝色*/
 
-.search .main .result span strong{
-    color:blue;
+.search .main .result .search-result{
+    list-style:none;
    
 }
-
+.search-result li{
+    float:left;
+    padding-left:5px;
+}
+.search-result li strong{
+    color:blue;
+}
 .search .main .search-content .hot-key{
     float:left;
     /*margin-bottom:10px;*/

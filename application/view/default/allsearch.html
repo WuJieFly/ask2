@@ -82,11 +82,30 @@
 
 
                 <div class="result">
-                    检索到<span class="label">{$rownum}</span>个结果
-                     <span> <a href="{url topictag-$word}"><strong>文章</strong> </a>   <span class="label">{$topicnum}</span></span>
-                   <span> <a href="{url question/search/$word}"><strong>问题</strong> </a>   <span class="label">{$questionnum}</span></span>
-                   <span> <a href="{url note/search/$word}"> <strong>公告</strong>  </a>  <span class="label">{$notenum}</span></span>
-                  <span>  <a href="{url category/search/$word }"> <strong>专题</strong> </a>   <span class="label">{$categorynum}</span></span> 
+
+                    <ul class="search-result">
+                        <li>
+                               检索到<span class="label">{$rownum}</span>个结果
+                        </li>
+                        <li>
+                            <a href="{url topictag-$word}"><strong>文章</strong> </a> 
+                            <span class="label">{$topicnum}</span>
+                        </li>
+                        <li>
+                             <a href="{url question/search/$word}"><strong>问题</strong> </a>
+                            <span class="label">{$questionnum}</span>
+                        </li>
+                        <li>
+                            <a href="{url note/search/$word}"> <strong>公告</strong>  </a>  <span class="label">{$notenum}</span>
+
+                        </li>
+                        <li>
+                            <a href="{url category/search/$word }"> <strong>专题</strong> </a>   <span class="label">{$categorynum}</span>
+                        </li>
+
+                    </ul>
+
+     
                 </div>
             
                 <!--{if $topiclist!=null||$questionlist!=null||$notelist!=null || $catlist!=null}-->
