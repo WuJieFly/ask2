@@ -222,6 +222,15 @@
                        <input class="checkbox inline" type="checkbox" {if $setting['code_message']}checked{/if} value="1" name="code_message">&nbsp;<label>站内消息</label>
             </td>
         </tr>
+        <tr>
+            <td class="altbg1" width="45%"><b>启用繁体功能:</b><br />
+                <span class="smalltxt">启用了繁体功能，用户就在登录的时候选择繁体语言选项！</span>
+            </td>
+            <td class="altbg2">
+               <input class="radio inline" type="radio" {if $setting['allow_traditional']} checked {/if} value ="1" name="allow_traditional" />&nbsp;是&nbsp;&nbsp; <input class="raido inline" type="radio" {if !$setting['allow_traditional']} checked {/if} value="0" name="allow_traditional" />&nbsp;否
+            </td>
+        </tr>
+
     </table>
     <br>
     <center><input type="submit" class="button" name="submit" value="提 交"></center><br>

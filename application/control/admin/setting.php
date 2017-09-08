@@ -120,6 +120,7 @@ class admin_settingcontrol extends base {
             $this->setting['notify_mail'] = intval(isset($this->post['notify_mail']));
             $this->setting['notify_message'] = intval(isset($this->post['notify_message']));
             $this->setting['allow_expert'] = intval($this->post['allow_expert']);
+            $this->setting['allow_traditional'] = intval($this->post['allow_traditional']);
             $this->setting['apend_question_num'] = intval($this->post['apend_question_num']);
             $this->setting['allow_credit3'] = intval($this->post['allow_credit3']);
             $overdue_days = intval($this->post['overdue_days']);
