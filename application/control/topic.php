@@ -84,10 +84,15 @@ var $whitelist;
             	$relrownum= $_ENV['topic']->rownum_by_title_sub($word,'cid'.$val['grade'],$val['id']);
                 $sublist[$key]['topics']=$relrownum;
             }
+            $hotwords = $_ENV['topic']->get_hotquery(6,'currnum');
           
+            $relateds  = $_ENV['topic']->get_relatedquery($word,5);
+            if ($rownum==0)
+            {
+                $corrects = $_ENV['topic']->get_correctedquery($word);
+            }
             
-            
-
+         
           
 foreach ($topiclist as $key=>$val){
 

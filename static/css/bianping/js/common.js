@@ -257,11 +257,40 @@ function usercard_out() {
 }
 
 
+//过滤掉字符串中特殊字符
+function jsreplacestr(str) {
+    var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]")
+    var rs = "";
+    for (var i = 0; i < str.length; i++) {
+        rs = rs + str.substr(i, 1).replace(pattern, '');
+    }
+    return rs;
+}
+//验证是否存在特殊字符
+function jsregstr(str) {
+    var tmp = /\.|&|\//;
+    if (tmp.test(str)) {
+        return true;
+    }
+    return false;
 
+}
 
+function changekeyword() {
+    var word = $("#search-kw").val();
+    word = jsreplacestr(word);
+    $("#search-kw").val(word);
+}
 
-
-
+function checkkeyword() {
+    var word = $("#search-kw").val();
+    if (jsregstr(word)) {
+        $("#search-kw").val('');
+        alert("搜索关键字包含特殊字符. & /");
+        return false;
+    }
+    return true;
+}
 
 
 
@@ -633,27 +662,27 @@ setTimeout(function(){
 
 $(function(){
 
-	load_message_sowenda();
-	$('[data-toggle="tooltip"]').tooltip('hide');
+    load_message_sowenda();
+    $('[data-toggle="tooltip"]').tooltip('hide');
     $(".user,.notification ").hover(function(){
 
         $(this).find(".dropdown-menu").show();
         $(this).find(".dropdown-menu").hover(function(){
-        	$(this).find(".dropdown-menu").show();
+            $(this).find(".dropdown-menu").show();
 
         },function(){
-        	$(this).find(".dropdown-menu").hide();
+            $(this).find(".dropdown-menu").hide();
 
         })
     },function(){
-    	$(this).find(".dropdown-menu").hide();
+        $(this).find(".dropdown-menu").hide();
 
     });
     $(".index .list-container .note-list li ").hover(function(){
-    	$(this).addClass("lightSpeedIn animated ");
+        $(this).addClass("lightSpeedIn animated ");
    
     },function(){
-    	$(this).removeClass("lightSpeedIn animated ");
+        $(this).removeClass("lightSpeedIn animated ");
 
     });
     $.fn.smartFloat = function() { 
@@ -688,7 +717,7 @@ $(function(){
             position($(this));                          
         }); 
     }; 
-  //分类选择
+    //分类选择
     $("#category1").change(function() {
         fillcategory(category2, $("#category1 option:selected").val(), "category2");
         $("#jiantou1").show();
@@ -714,39 +743,68 @@ $(function(){
     
     
     
-function fillcategorytiwen(category2, value1, cateid) {
-    var optionhtml = '<option value="0">不选择</option>';
-    var selectedcid = 0;
-    if (cateid === "category2") {
-        selectedcid = $("#selectcid2").val();
-        for (var i = 0; i < category2.length; i++) {
-        if(category2[i][2]!="E10开发-FAQ"&&category2[i][2]!="E10服务-FAQ"&&category2[i][2]!="易飞服务-FAQ"){
-        }else{
-        if (value1 === category2[i][0]) {
-            var selected = '';
-//            if (selectedcid === category2[i][1]) {
-//                selected = ' selected';
-//                $("#" + cateid).show();
-//            }
-            optionhtml += "<option value='" + category2[i][1] + "' " + selected + ">" + category2[i][2] + "</option>";
+    function fillcategorytiwen(category2, value1, cateid) {
+        var optionhtml = '<option value="0">不选择</option>';
+        var selectedcid = 0;
+        if (cateid === "category2") {
+            selectedcid = $("#selectcid2").val();
+            for (var i = 0; i < category2.length; i++) {
+                if (category2[i][2] != "E10开发-FAQ" && category2[i][2] != "E10服务-FAQ" && category2[i][2] != "易飞服务-FAQ") {
+                } else {
+                    if (value1 === category2[i][0]) {
+                        var selected = '';
+                        //            if (selectedcid === category2[i][1]) {
+                        //                selected = ' selected';
+                        //                $("#" + cateid).show();
+                        //            }
+                        optionhtml += "<option value='" + category2[i][1] + "' " + selected + ">" + category2[i][2] + "</option>";
+                    }
+                }
+
+            }
         }
-        }
-        
+        $("#" + cateid).html("");
+
+        $("#" + cateid).html(optionhtml);
     }
-    } 
-    $("#" + cateid).html("");
-    
-    $("#" + cateid).html(optionhtml);
-}
 
 
 
 
 
 
+    //搜索框智能提示
+    ;(function () {
 
+        var onselectquery = function (data, val) {
+            //console.log(data);
+            //console.log(val);
+        };
+     
+        var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
+        var fnFormatResult = function fnFormatResult(value, data, currentValue) {
+            var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
+            var result = value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
+            var tab = '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+            return result.replace(/;/g, tab);
+        }
 
+        var ajoptions = {
+            serviceUrl: g_site_url + "index.php?allsearch/ajaxexpandedquery",
+            width: 280,//提示框的宽度
+            maxHeight: 300,
+            delimiter: /(,|;)\s*/,//分隔符
+            onSelect: onselectquery,//选中之后的回调函数
+            fnFormatResult: fnFormatResult,
+            deferRequestBy: 0, //单位微秒
+            //extraParams: {userinfo:$.trim($("#askid").val())},//动态参数值
+            params: { query: $.trim($("#search-kw").val()) },//参数
+            noCache: false //是否启用缓存 默认是开启缓存的
+        }
 
+        $('#search-kw').autocomplete(ajoptions);
+
+    })();
 
 
 

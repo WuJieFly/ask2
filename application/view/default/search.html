@@ -50,11 +50,7 @@
  <div class="setting-icon"><i class="fa fa-user"></i></div> <span>用户</span>
  </a>
  </li>-->
- <li class="">
- <a href="{url category/search/$word}">
- <div class="setting-icon"><i class="fa fa-tag"></i></div> <span>专题</span>
- </a>
- </li>
+
     <li> 
         <a href="{url note/search/$word}">
             <div class="setting-icon"><i class="fa fa-file-word-o"></i> </div>
@@ -62,12 +58,33 @@
         </a>
     </li>
 
+ <li class="">
+ <a href="{url category/search/$word}">
+ <div class="setting-icon"><i class="fa fa-tag"></i></div> <span>专题</span>
+ </a>
+ </li>
+    
  </ul>
  </div> 
     
     
     <div class="col-xs-16 col-xs-offset-8 main">
- <div class="search-content"><!----> <div class="result">检索到{$rownum} 个结果</div> 
+ <div class="search-content"><!----> 
+             <div class ="hot-key">
+                    <h4 style="float:left">为你推荐</h4>
+                    <!--{if $hotwords!=null}-->
+                    <!--{loop  $hotwords $hotkey $hot}-->
+                    <span > <a href="{url question/search/$hotkey }">{$hotkey}</a></span>
+                    <!--{/loop}-->
+
+
+                    <!--{/if}-->
+                </div>
+
+     
+     
+     
+     <div class="result">检索到{$rownum} 个结果</div> 
  
   <!--{if $questionlist}-->
    <ul class="note-list">
@@ -90,16 +107,44 @@
         </ul> 
    <!--{else}-->
        <div id="no-result">
-                <p>抱歉，未找到和您搜索相关的内容。</p>
-                <strong>建议您：</strong>
-                <ul class="nav">
-                    <li><span>检查输入是否正确</span></li>
-                    <li><span>简化查询词或尝试其他相关词</span></li>
-                </ul>
+                   <p style="clear:left">抱歉，未找到和您搜索相关的内容。</p>
+                    <!--{if $corrects !=null}-->
+                    <strong>您是不是要找：</strong>
+                    <ul class="nav">
+                        <!--{loop  $corrects $correct}-->
+                        <li><a href="{url question/search/$correct}">{$correct}</a></li>
+                        <!--{/loop}-->
+                    </ul>
+                    <!--{else}-->
+
+                    <strong>建议您：</strong>
+                    <ul class="nav">
+                        <li><span>检查输入是否正确</span></li>
+                        <li><span>简化查询词或尝试其他相关词</span></li>
+                    </ul>
+                    <!--{/if}-->
             </div>
     <!--{/if}-->
 
 <div class="pages">  {$departstr}</div>
+
+           <div class="related">
+              
+                <!--{if $relateds !=null}-->
+                  <h4>相关搜索</h4>
+                <ul>
+                  <!--{loop $relateds $key $val}-->
+                    <li>
+                        <a href="{url question/search/$val}">{$val}</a>
+                    </li>
+
+                <!--{/loop}-->
+                </ul>
+        
+                <!--{/if}-->
+               
+            </div>
+
         
          </div>
          </div>

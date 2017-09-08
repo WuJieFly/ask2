@@ -39,6 +39,16 @@
                     </a>
                 </li>
                 <li class="">
+                    <a href="{url note/search/$word}">
+                        <div class="setting-icon">
+                            <i class="fa fa-file-word-o"></i>
+                        </div>
+                        <span>公告
+                        </span>
+
+                    </a>
+                </li>
+                <li class="">
                     <a href="{url category/search/$word}">
                         <div class="setting-icon">
                             <i class=" fa fa-tag"></i>
@@ -48,17 +58,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="">
-                    <a href="{url note/search/$word}">
-                        <div class="setting-icon">
-                            <i class="fa fa-file-word-o"></i>
-                        </div>
-                        <span>
-                            公告
-                        </span>
-
-                    </a>
-                </li>
+           
 
 
             </ul>
@@ -66,12 +66,46 @@
 
         <div class="col-xs-16 col-xs-offset-8 main">
             <div class ="search-content">
+
+                <div class ="hot-key">
+                    <h4 style="float:left">为你推荐</h4>
+                    <!--{if $hotwords!=null}-->
+                    <!--{loop  $hotwords $hotkey $hot}-->
+                    <span > <a href="{url allsearch/default/$hotkey }">{$hotkey}</a></span>
+                    <!--{/loop}-->
+
+
+                    <!--{/if}-->
+                </div>
+
+
+
+
                 <div class="result">
-                    检索到<span class="label">{$rownum}</span>个结果
-                     <span> <a href="{url topictag-$word}"><strong>文章</strong> </a>   <span class="label">{$topicnum}</span></span>
-                   <span> <a href="{url question/search/$word}"><strong>问题</strong> </a>   <span class="label">{$questionnum}</span></span>
-                   <span> <a href="{url note/search/$word}"> <strong>公告</strong>  </a>  <span class="label">{$notenum}</span></span>
-                  <span>  <a href="{url category/search/$word }"> <strong>专题</strong> </a>   <span class="label">{$categorynum}</span></span> 
+
+                    <ul class="search-result">
+                        <li>
+                               检索到<span class="label">{$rownum}</span>个结果
+                        </li>
+                        <li>
+                            <a href="{url topictag-$word}"><strong>文章</strong> </a> 
+                            <span class="label">{$topicnum}</span>
+                        </li>
+                        <li>
+                             <a href="{url question/search/$word}"><strong>问题</strong> </a>
+                            <span class="label">{$questionnum}</span>
+                        </li>
+                        <li>
+                            <a href="{url note/search/$word}"> <strong>公告</strong>  </a>  <span class="label">{$notenum}</span>
+
+                        </li>
+                        <li>
+                            <a href="{url category/search/$word }"> <strong>专题</strong> </a>   <span class="label">{$categorynum}</span>
+                        </li>
+
+                    </ul>
+
+     
                 </div>
             
                 <!--{if $topiclist!=null||$questionlist!=null||$notelist!=null || $catlist!=null}-->
@@ -233,17 +267,44 @@
                 </ul>
                 <!--{else}-->
                 <div id="no-result">
-                    <p>抱歉，未找到和您搜索相关的内容。</p>
+                    <p style="clear:left">抱歉，未找到和您搜索相关的内容。</p>
+                    <!--{if $corrects !=null}-->
+                    <strong>您是不是要找：</strong>
+                    <ul class="nav">
+                        <!--{loop  $corrects $correct}-->
+                        <li><a href="{url allsearch/default/$correct}">{$correct}</a></li>
+                        <!--{/loop}-->
+                    </ul>
+                    <!--{else}-->
+
                     <strong>建议您：</strong>
                     <ul class="nav">
                         <li><span>检查输入是否正确</span></li>
                         <li><span>简化查询词或尝试其他相关词</span></li>
                     </ul>
+                    <!--{/if}-->
                 </div>
 
                 <!--{/if}-->
                 
 <div class="pages">  {$departstr}</div>
+
+            <div class="related">
+              
+                <!--{if $relateds !=null}-->
+                  <h4>相关搜索</h4>
+                <ul>
+                  <!--{loop $relateds $key $val}-->
+                    <li>
+                        <a href="{url allsearch/default/$val}">{$val}</a>
+                    </li>
+
+                <!--{/loop}-->
+                </ul>
+        
+                <!--{/if}-->
+               
+            </div>
             </div>
         </div>
 

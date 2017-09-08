@@ -5275,13 +5275,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="application\view\default\allsearch.html" />
+    <Content Include="application\view\default\customercheck.html" />
+    <Content Include="application\view\default\customerpasstip.html" />
+    <Content Include="application\view\default\customertip.html" />
+    <Content Include="application\view\default\customer_emailcheck.html" />
     <Content Include="application\view\default\editor.html" />
+    <Content Include="application\view\default\existcustomer.html" />
+    <Content Include="application\view\default\invite_form.html" />
+    <Content Include="application\view\default\invite_tip.html" />
     <Content Include="application\view\default\myattention_topic.html" />
     <Content Include="application\view\default\myxinzhi.html" />
     <Content Include="application\view\default\noasknosolve.html" />
     <Content Include="application\view\default\nosolvequs.html" />
     <Content Include="application\view\default\notesearch.html" />
+    <Content Include="application\view\default\querycustomer_result.html" />
     <Content Include="application\view\default\sider_alluser.html" />
+    <Content Include="application\view\default\viewcustomer.html" />
     <Content Include="lib\mediawiki\mediawiki-1.15.2\AdminSettings.sample" />
     <Content Include="lib\mediawiki\mediawiki-1.15.2\api.php5" />
     <Content Include="lib\mediawiki\mediawiki-1.15.2\bin\svnstat" />

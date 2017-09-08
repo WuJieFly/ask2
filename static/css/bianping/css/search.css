@@ -485,16 +485,61 @@
 }
 .search .main .result {
 	position:absolute;
-	top:0;
+	top:10px;
 	right:15px;
 	font-size:13px;
 	color:#b4b4b4
 }
 /*搜索栏位的加蓝色*/
 
-.search .main .result span strong{
-    color:blue;
+.search .main .result .search-result{
+    list-style:none;
    
+}
+.search-result li{
+    float:left;
+    padding-left:5px;
+}
+.search-result li strong{
+    color:blue;
+}
+.search .main .search-content .hot-key{
+    float:left;
+    /*margin-bottom:10px;*/
+    margin-top:-25px;
+
+}
+.hot-key  span {
+    margin-left:15px;
+    margin-top:10px;
+    float:left;
+}
+
+.search .main .search-content .hot-key span a{
+    color:blue;
+}
+
+
+/*相关搜索*/
+
+.search .main .related{
+    position:fixed;
+    top:350px;
+    right:20px;
+    background-color:#f0f0f0;
+    text-align:center;
+    width:150px;
+    z-index:9;
+    
+    
+}
+
+
+.search .main .related ul {
+    list-style-type:none;
+}
+.search .main .related ul li{
+    margin-bottom:15px;
 }
 
 .search .main .user-list {

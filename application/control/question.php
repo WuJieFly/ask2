@@ -1682,7 +1682,13 @@ class questioncontrol extends base
             $relrownum= $_ENV['question']->search_title_num_sub($word,$qstatus,'cid'.$val['grade'],$val['id']);
             $sublist[$key]['topics']=$relrownum;
         }
+        $hotwords = $_ENV['question']->get_hotquery(6,'currnum');
         
+        $relateds  = $_ENV['question']->get_relatedquery($word,5);
+        if ($rownum==0)
+        {
+            $corrects = $_ENV['question']->get_correctedquery($word);
+        }
         
         
         //if(count($questionlist)==0){
