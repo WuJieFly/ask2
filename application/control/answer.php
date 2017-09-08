@@ -41,15 +41,17 @@ class answercontrol extends base {
 //        }
 //        				}
             $flag = ($answer['authorid']==$this->user['uid'])?1:2;
-            $_ENV['answer']->append($answer['id'], $this->user['realname'], $this->user['uid'], $this->post['content'],$qid);
+            $content = $this->post['content'];
+            $content = convertttos($content);
+            $_ENV['answer']->append($answer['id'], $this->user['realname'], $this->user['uid'], $content,$qid);
             $_ENV['answer']->update_answerflag($aid,$flag);
-            $_ENV['question']->updatesupplysearch($qid,$this->post['content']); //回答追答更新问题搜索栏位
+            $_ENV['question']->updatesupplysearch($qid,$content); //回答追答更新问题搜索栏位
             if ($answer['authorid'] == $this->user['uid']) {//追答
               //通知给提问者
                 $qurl =' <br> <a href="' . url('question/view/' . $qid, 1) . '">点击查看问题</a>';
                 $msginfo =$_ENV['email_msg']->question_ask_ans($question['author'],$question['title'],$qurl);
                 $_ENV['message']->add($this->user['realname'], $this->user['uid'], $question['authorid'], $msginfo['title'], $msginfo['content']);
-                $_ENV['doing']->add($this->user['uid'], $this->user['realname'], 7, $qid, $this->post['content']);
+                $_ENV['doing']->add($this->user['uid'], $this->user['realname'], 7, $qid, $content);
 
                 $quser= $_ENV['user']->get_by_uid($question['authorid']);
         	
@@ -72,7 +74,7 @@ class answercontrol extends base {
                 $msginfo =$_ENV['email_msg']->question_comment($answer['author'],$question['title'],$qurl);
              
                 $_ENV['message']->add($this->user['realname'], $this->user['uid'], $answer['authorid'],$msginfo['title'],$msginfo['content']);
-                $_ENV['doing']->add($this->user['uid'], $this->user['realname'], 6, $qid, $this->post['content'], $answer['id'], $answer['authorid'], $answer['content']);
+                $_ENV['doing']->add($this->user['uid'], $this->user['realname'], 6, $qid, $content, $answer['id'], $answer['authorid'], $answer['content']);
                 $auser= $_ENV['user']->get_by_uid($answer['authorid']);
       
                 if(isset($this->setting['notify_mail'])&&$this->setting['notify_mail']=='1'){

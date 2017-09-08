@@ -3,6 +3,18 @@
 <body class="no-padding reader-black-font">
 <div class="sign">
     <!-- <div class="logo"><a href="/"><img src="{$setting['site_logo']}" alt="Logo"></a></div>-->
+    <div class="dropdown  dropdown-hover " style="position: absolute; margin-left: 100px; top: 15px; right: 100px">
+        <div class="language-select">
+            <select class="form-control">
+                <option value="zh_CN">简体</option>
+                <option value="zh_TW">繁体</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
     <div class="main" style="padding: 0px;">
 
 
@@ -42,6 +54,7 @@
                     <div class="remember-btn">
                         <input type="checkbox" value="1" name="net_auto_login" checked="checked"><span>记住我</span>
                     </div>
+
                     <!--    <div class="forget-btn">
                           <a class=""  href="{url user/getpass}">登录遇到问题?</a>
 
@@ -110,9 +123,24 @@
             }
         }
     });
+    var langval = $.cookie('language');
+    if (langval == null || langval == undefined) {
+        $.cookie("language", 'zh_CN', { expires: 7, path: '/' }); //设置默认语言
+    } else {
+        $('.sign .language-select select').val(langval);
+    }
+    
 
-    $.cookie("language", 'zh-CN', { expires: 7 }); //设置默认语言
-
+    $('.sign .language-select select').change(function () {
+        var change = $(this).val();
+        if (change=='zh_CN') {
+            $.cookie("language", 'zh_CN', { expires: 7, path: '/' });
+            window.open("{SITE_URL}user/login");
+        } else if (change == 'zh_TW') {
+            $.cookie('language', 'zh_TW', { expires: 7, path: '/' });
+            window.open("{SITE_URL}user/login");
+        }
+    });
 
     alert($.cookie('language'));
 
@@ -268,5 +296,7 @@
             }
         });
     });
+
+
 </script>
 <!--{template footer}-->
